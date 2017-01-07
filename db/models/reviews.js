@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt')
 const Sequelize = require('sequelize')
 const db = require('APP/db')
 
-const Reviews = db.define('reviews', {
+const Review = db.define('reviews', {
   rating: {
   	type: Sequelize.INTEGER,
   	allowNull: false,
@@ -30,7 +30,7 @@ const Reviews = db.define('reviews', {
 
 }
 
-module.exports = Reviews;
+module.exports = Review;
 
 
 // reviews_id (pk)

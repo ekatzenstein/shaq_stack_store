@@ -3,7 +3,7 @@
 const Sequelize = require('sequelize');
 const db = require('APP/db');
 
-const Orders = db.define('orders', {
+const Order = db.define('orders', {
   price: {
   	type: Sequelize.DOUBLE,
   	allowNull: false
@@ -30,4 +30,4 @@ const Orders = db.define('orders', {
   }
 });
 
-module.exports = Orders;
+module.exports = Order;

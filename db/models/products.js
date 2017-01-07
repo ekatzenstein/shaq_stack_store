@@ -4,7 +4,7 @@
 const Sequelize = require('sequelize');
 const db = require('APP/db');
 
-const Products = db.define('products', {
+const Product = db.define('products', {
   title: {
   	type: Sequelize.STRING,
   	allowNull: false
@@ -30,4 +30,4 @@ const Products = db.define('products', {
 
 });
 
-module.exports = Products;
+module.exports = Product;
