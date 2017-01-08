@@ -4,14 +4,14 @@ const Sequelize = require('sequelize');
 const db = require('APP/db');
 
 const Order = db.define('orders', {
-  price: {
-  	type: Sequelize.DOUBLE,
-  	allowNull: false
-  },
-  quantity: {
-  	type: Sequelize.INTEGER,
-  	allowNull: false
-  },
+  // price: {
+  // 	type: Sequelize.DOUBLE,
+  // 	allowNull: false
+  // },
+  // quantity: {
+  // 	type: Sequelize.INTEGER,
+  // 	allowNull: false
+  // },
   date: {
   	type: Sequelize.DATE,
   	allowNull: false
@@ -26,7 +26,8 @@ const Order = db.define('orders', {
   },
   status: {
   	type: Sequelize.ENUM('Created', 'Processing', 'Cancelled', 'Completed'),
-  	allowNull: false
+  	allowNull: false,
+    defaultVale: 'Created'
   }
 });
 

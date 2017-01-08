@@ -11,6 +11,7 @@ import WhoAmI from './components/WhoAmI'
 
 import Products from './components/Products';
 import Product from './components/Product';
+import Cart from './components/Cart';
 
 
 
@@ -33,6 +34,7 @@ render (
         <IndexRedirect to="/products" />
         <Route path="/products" component={Products} />
         <Route path="/products/:productId" component={Product}/>
+        <Route path="/cart" component={Cart} />
       </Route>
     </Router>
   </Provider>,
