@@ -80,7 +80,7 @@
 	
 	var _Product2 = _interopRequireDefault(_Product);
 	
-	var _Cart = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./components/Cart\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+	var _Cart = __webpack_require__(301);
 	
 	var _Cart2 = _interopRequireDefault(_Cart);
 	
@@ -31252,6 +31252,316 @@
 	
 	
 	exports.default = Product;
+
+/***/ },
+/* 301 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRouter = __webpack_require__(32);
+	
+	var _axios = __webpack_require__(264);
+	
+	var _axios2 = _interopRequireDefault(_axios);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var products = [{ product_id: 1, title: 'Hats', category: ['Clothes', 'Accessories'], current_price: 16, description: 'Fedora with a feather', availability: true, inventory: 100 }, { product_id: 2, title: 'Ski Suits', category: ['Athletics', 'Clothes'], current_price: 11, description: 'Full body ski suit', availability: false, inventory: 5 }, { product_id: 3, title: 'Fanny Pack', category: ['Accessories'], current_price: 12, description: 'Bright neon in all colors', availability: true, inventory: 64 }, { product_id: 4, title: 'Chuck Taylors', category: ['Clothes', 'Shoes'], current_price: 15, description: 'A variation on a classsic', availability: false, inventory: 35 }, { product_id: 5, title: 'Hairspray', category: ['Beauty'], current_price: 41, description: 'Fulll of CFCs', availability: true, inventory: 22 }, { product_id: 6, title: 'Socks', category: ['Clothes'], current_price: 51, description: 'Big wooly socks', availability: true, inventory: 21 }, { product_id: 7, title: 'Wigs', category: ['Accessories', 'Beauty'], current_price: 21, description: 'Business in the front, party in the back', availability: false, inventory: 100 }];
+	
+	var items = products.map(function (product, i) {
+	  return { id: i, product: product, quantity: 1, cost: product.current_price };
+	});
+	
+	var Cart = function (_Component) {
+	  _inherits(Cart, _Component);
+	
+	  function Cart() {
+	    _classCallCheck(this, Cart);
+	
+	    var _this = _possibleConstructorReturn(this, (Cart.__proto__ || Object.getPrototypeOf(Cart)).call(this));
+	
+	    _this.state = {
+	      name: '',
+	      email: '',
+	      address: '',
+	      cart: items
+	    };
+	    // remember to bind actions
+	    _this._purchaseSubmit = _this._purchaseSubmit.bind(_this);
+	    _this._onNameChange = _this._onNameChange.bind(_this);
+	    _this._onEmailChange = _this._onEmailChange.bind(_this);
+	    _this._onAddressChange = _this._onAddressChange.bind(_this);
+	    return _this;
+	  }
+	  // componentDidMount() {
+	  //  //this.nextJoke()
+	  //  axios.get('/api/products')
+	  //  .then(res => res.data)
+	  //  .then( products => {
+	  //   this.setState({products: products});
+	  //  });
+	
+	  // }
+	
+	  _createClass(Cart, [{
+	    key: '_purchaseSubmit',
+	    value: function _purchaseSubmit(evt) {
+	      evt.preventDefault();
+	      console.log('state: ', this.state);
+	      _axios2.default.post('/api/orders', {
+	        date: new Date(),
+	        address: this.state.address,
+	        email: this.state.email,
+	        status: 'Created',
+	        cart: this.state.cart
+	      }).then(function (res) {
+	        return console.log('res: ', res.data);
+	      });
+	    }
+	  }, {
+	    key: '_onNameChange',
+	    value: function _onNameChange(evt) {
+	      this.setState({ name: evt.target.value, hasChange: true });
+	    }
+	  }, {
+	    key: '_onEmailChange',
+	    value: function _onEmailChange(evt) {
+	      this.setState({ email: evt.target.value, hasChange: true });
+	    }
+	  }, {
+	    key: '_onAddressChange',
+	    value: function _onAddressChange(evt) {
+	      this.setState({ address: evt.target.value, hasChange: true });
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	
+	      var input = this.state;
+	      var total = this.state.cart.reduce(function (prev, curr) {
+	        console.log('prev is: ', prev, 'curr: ', curr);
+	        return prev + curr.cost;
+	      }, 0);
+	
+	      var orderInfo = _react2.default.createElement(
+	        'div',
+	        { className: 'well' },
+	        _react2.default.createElement(
+	          'form',
+	          { className: 'form-horizontal', onSubmit: this._purchaseSubmit },
+	          _react2.default.createElement(
+	            'fieldset',
+	            null,
+	            _react2.default.createElement(
+	              'legend',
+	              null,
+	              'New Order'
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'form-group' },
+	              _react2.default.createElement(
+	                'label',
+	                { className: 'col-xs-2 control-label' },
+	                'Name'
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'col-xs-10' },
+	                _react2.default.createElement('input', { className: 'form-control', type: 'text', onChange: this._onNameChange, value: input.name })
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'form-group' },
+	              _react2.default.createElement(
+	                'label',
+	                { className: 'col-xs-2 control-label' },
+	                'Shipping Address'
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'col-xs-10' },
+	                _react2.default.createElement('input', { className: 'form-control', type: 'text', onChange: this._onAddressChange, value: input.address })
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'form-group' },
+	              _react2.default.createElement(
+	                'label',
+	                { className: 'col-xs-2 control-label' },
+	                'E-mail'
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'col-xs-10' },
+	                _react2.default.createElement('input', { className: 'form-control', type: 'text', onChange: this._onEmailChange, value: input.email })
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'form-group' },
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'col-xs-10 col-xs-offset-2' },
+	                _react2.default.createElement(
+	                  'button',
+	                  { type: 'submit', className: 'btn btn-success' },
+	                  'BUY!!'
+	                )
+	              )
+	            )
+	          )
+	        )
+	      );
+	
+	      var cart = this.state.cart && this.state.cart.map(function (item) {
+	        var product = item.product;
+	        return _react2.default.createElement(
+	          'tr',
+	          { key: item.id },
+	          _react2.default.createElement(
+	            'td',
+	            null,
+	            ' ',
+	            _react2.default.createElement(
+	              _reactRouter.Link,
+	              { to: '/products/' + product.id },
+	              product.title
+	            ),
+	            ' '
+	          ),
+	          _react2.default.createElement(
+	            'td',
+	            null,
+	            ' ',
+	            product.category.join(', '),
+	            ' '
+	          ),
+	          _react2.default.createElement(
+	            'td',
+	            null,
+	            ' ',
+	            product.photo_url,
+	            ' '
+	          ),
+	          _react2.default.createElement(
+	            'td',
+	            null,
+	            ' ',
+	            product.current_price,
+	            ' '
+	          ),
+	          _react2.default.createElement(
+	            'td',
+	            null,
+	            ' ',
+	            product.description,
+	            ' '
+	          ),
+	          _react2.default.createElement(
+	            'td',
+	            null,
+	            ' ',
+	            item.quantity,
+	            ' '
+	          ),
+	          _react2.default.createElement(
+	            'td',
+	            null,
+	            ' ',
+	            item.cost,
+	            ' '
+	          )
+	        );
+	      });
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(
+	          'h1',
+	          null,
+	          'CART'
+	        ),
+	        _react2.default.createElement(
+	          'table',
+	          null,
+	          _react2.default.createElement(
+	            'tbody',
+	            null,
+	            _react2.default.createElement(
+	              'tr',
+	              null,
+	              _react2.default.createElement(
+	                'th',
+	                null,
+	                ' title '
+	              ),
+	              _react2.default.createElement(
+	                'th',
+	                null,
+	                ' category '
+	              ),
+	              _react2.default.createElement(
+	                'th',
+	                null,
+	                ' photo_url '
+	              ),
+	              _react2.default.createElement(
+	                'th',
+	                null,
+	                ' current_price '
+	              ),
+	              _react2.default.createElement(
+	                'th',
+	                null,
+	                ' description '
+	              ),
+	              _react2.default.createElement(
+	                'th',
+	                null,
+	                ' quantity '
+	              ),
+	              _react2.default.createElement(
+	                'th',
+	                null,
+	                ' cost '
+	              )
+	            ),
+	            cart
+	          )
+	        ),
+	        _react2.default.createElement('br', null),
+	        'Total: ',
+	        total,
+	        _react2.default.createElement('br', null),
+	        orderInfo
+	      );
+	    }
+	  }]);
+	
+	  return Cart;
+	}(_react.Component);
+	
+	exports.default = Cart;
 
 /***/ }
 /******/ ]);
