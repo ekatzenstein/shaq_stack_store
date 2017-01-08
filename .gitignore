@@ -3,6 +3,10 @@ logs
 *.log
 npm-debug.log*
 
+#Ignore bundle build
+public/bundle.js
+public/bundle.js.map
+
 # Runtime data
 pids
 *.pid

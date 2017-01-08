@@ -11,7 +11,10 @@ import WhoAmI from './components/WhoAmI'
 
 import Products from './components/Products';
 import Product from './components/Product';
+
 import Signup from './components/signUp'
+import Cart from './components/Cart';
+import Admin from './components/Admin';
 
 
 const ExampleApp = connect(
@@ -21,7 +24,7 @@ const ExampleApp = connect(
     <div>
       <nav>
         {user ? <WhoAmI/> : <Login/>}
-      </nav> 
+      </nav>
       {children}
     </div>
 )
@@ -34,6 +37,8 @@ render (
         <Route path="/products" component={Products} />
         <Route path="/products/:productId" component={Product}/>
         <Route path="/signup" component={Signup}/>
+        <Route path="/cart" component={Cart} />
+        <Route path="/admin" component={Admin} />
       </Route>
     </Router>
   </Provider>,
