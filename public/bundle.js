@@ -31212,6 +31212,11 @@
 	            productComponent
 	          )
 	        ),
+	        _react2.default.createElement(
+	          'button',
+	          { onClick: this.handleClick },
+	          'Add to Cart'
+	        ),
 	        this.state.product.reviews && this.state.product.reviews.map(function (review, i) {
 	          return _react2.default.createElement(
 	            'div',
@@ -31270,12 +31275,7 @@
 	          { onClick: this.addReview },
 	          'Add Review'
 	        ),
-	        _react2.default.createElement('br', null),
-	        _react2.default.createElement(
-	          'button',
-	          { onClick: this.handleClick },
-	          'Add to Cart'
-	        )
+	        _react2.default.createElement('br', null)
 	      );
 	    }
 	  }]);

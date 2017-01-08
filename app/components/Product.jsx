@@ -97,6 +97,7 @@ export default class Product extends Component {
         </tbody>
 
         </table>
+        <button onClick={this.handleClick}>Add to Cart</button>
         {this.state.product.reviews && this.state.product.reviews.map((review,i)=>(
           <div key={i}><h3>{review.rating}/5</h3><span>{review.updated_at}</span><br/>
           <p>{review.review_text}</p>
@@ -115,7 +116,7 @@ export default class Product extends Component {
           Add Review</button>
         <br/>
 
-        <button onClick={this.handleClick}>Add to Cart</button>
+
 
       </div>
     )
