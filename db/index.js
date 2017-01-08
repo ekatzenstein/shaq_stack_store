@@ -7,7 +7,9 @@ const app = require('APP')
 const name = (process.env.DATABASE_NAME || app.name) +
   (app.isTesting ? '_test' : '')
 
+console.log('url: ', process.env.DATABASE_URL);
 const url = process.env.DATABASE_URL || `postgres://erick:mypassword123@localhost:5432/${name}`
+//const url = process.env.DATABASE_URL;
 
 console.log(chalk.yellow(`Opening database connection to ${url}`));
 

@@ -8,8 +8,10 @@
     "test-watch": "check-node-version --node '>= 6.7.0' && bin/setup && mocha --compilers js:babel-register --watch app/**/*.test.js app/**/*.test.jsx db/**/*.test.js server/**/*.test.js",
     "build": "check-node-version --node '>= 6.7.0' && bin/setup && webpack",
     "build-watch": "check-node-version --node '>= 6.7.0' && bin/setup && webpack -w",
-    "start": "check-node-version --node '>= 6.7.0' && bin/setup && nodemon server/start.js",
-    "seed": "node db/seed.js"
+    "start": "check-node-version --node '>= 6.7.0' && bin/setup && DATABASE_URL=postgres://localhost/graceshopper nodemon server/start.js",
+    "start:eric": "check-node-version --node '>= 6.7.0' && bin/setup && DATABASE_URL=postgres://erick:mypassword123@localhost:5432/graceshopper nodemon server/start.js",
+    "seed": "DATABASE_URL=postgres://localhost/graceshopper node db/seed.js",
+    "seed:eric": "DATABASE_URL=postgres://erick:mypassword123@localhost:5432/graceshopper node db/seed.js"
   },
   "repository": {
     "type": "git",

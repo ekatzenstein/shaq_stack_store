@@ -12,6 +12,7 @@ module.exports = customUserRoutes
 // Epilogue will automatically create standard RESTful routes
 const products = epilogue.resource({
   model: db.model('products'),
+  associations: true,
   endpoints: ['/products', '/products/:id']
 })
 

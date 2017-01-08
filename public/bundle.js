@@ -31052,21 +31052,21 @@
 	      var _this2 = this;
 	
 	      //this.nextJoke()
-	      _axios2.default.get('/api/reviews/' + this.props.params.productId).then(function (res) {
-	        console.log('');
-	        console.log(res.data);
-	        console.log('');
-	        return res.data;
-	      }).then(function (review) {
-	        _this2.setState({ reviews: [review] });
-	      }).catch(function (error) {
-	        console.log(error);
-	      });
+	      //  axios.get(`/api/reviews/${this.props.params.productId}`)
+	      //  .then(res => {
+	      //    console.log('')
+	      //    console.log(res.data)
+	      //    console.log('')
+	      //    return res.data})
+	      //  .then( review => {
+	      //   this.setState({reviews:[review]})
+	      // }).catch((error)=>{console.log(error)});
 	
 	      //  console.log('getting product details');
 	      _axios2.default.get('/api/products/' + this.props.params.productId).then(function (res) {
 	        return res.data;
 	      }).then(function (product) {
+	        console.log('product obj: ', product);
 	        _this2.setState({ product: product });
 	      });
 	    }
@@ -31196,7 +31196,7 @@
 	            productComponent
 	          )
 	        ),
-	        this.state.reviews.map(function (review, i) {
+	        this.state.product.reviews && this.state.product.reviews.map(function (review, i) {
 	          return _react2.default.createElement(
 	            'div',
 	            { key: i },

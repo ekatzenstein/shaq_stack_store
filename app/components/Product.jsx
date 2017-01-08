@@ -16,22 +16,21 @@ export default class Product extends Component {
 
   componentDidMount() {
    //this.nextJoke()
-   axios.get(`/api/reviews/${this.props.params.productId}`)
-   .then(res => {
-     console.log('')
-     console.log(res.data)
-     console.log('')
-     return res.data})
-   .then( review => {
-    this.setState({reviews:[review]})
-  }).catch((error)=>{console.log(error)})
-
-   ;
+  //  axios.get(`/api/reviews/${this.props.params.productId}`)
+  //  .then(res => {
+  //    console.log('')
+  //    console.log(res.data)
+  //    console.log('')
+  //    return res.data})
+  //  .then( review => {
+  //   this.setState({reviews:[review]})
+  // }).catch((error)=>{console.log(error)});
 
   //  console.log('getting product details');
    axios.get(`/api/products/${this.props.params.productId}`)
    .then(res => res.data)
    .then( product => {
+    console.log('product obj: ', product);
     this.setState({product: product});
    });
 
@@ -85,12 +84,13 @@ export default class Product extends Component {
         </tbody>
 
         </table>
-        {this.state.reviews.map((review,i)=>(
+        {this.state.product.reviews && this.state.product.reviews.map((review,i)=>(
           <div key={i}><h3>{review.rating}/5</h3><span>{review.updated_at}</span><br/>
           <p>{review.review_text}</p>
           </div>
         ))}
         <button onClick={this.handleClick}>Add to Cart</button>
+        
       </div>
     )
   }
@@ -110,3 +110,5 @@ export default class Product extends Component {
 //     </tr>
 //   )
 // });
+
+
