@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import StarRatingComponent from 'react-star-rating-component';
 
 const testArr = [{title: 'test'}];
 export default class Product extends Component {
@@ -9,10 +10,12 @@ export default class Product extends Component {
     this.state = {
       product: {},
       reviews:[],
-      review:''
+      review:'',
+      rating:3
 
     };
     this.addReview=this.addReview.bind(this);
+    this.updateRating=this.updateRating.bind(this);
 
   }
 
@@ -37,14 +40,18 @@ export default class Product extends Component {
    });
 
   }
+  updateRating(nextValue, prevValue, name) {
+      this.setState({rating: nextValue});
+    }
 
   handleClick(evt) {
     console.log('clicked cart');
   }
 
   addReview(evt) {
-    const review_text = document.getElementById('review').value;
-    const rating = document.getElementById('rating').value;
+    let review_text = document.getElementById('review').value;
+    review_text = review_text==='' ? 'no input text' : review_text;
+    const rating = this.state.rating;
     axios.post(`/api/reviews`,{rating, review_text, product_id:this.props.params.productId})
     .then(res=>res.data)
     .then(review=>{
@@ -56,8 +63,6 @@ export default class Product extends Component {
 
 
   render() {
-    {console.log(this)}
-    //const product = this.state.product;
 
     const product = this.state.product;
 
@@ -103,14 +108,16 @@ export default class Product extends Component {
           <p>{review.review_text}</p>
           </div>
         ))}
+        <StarRatingComponent
+          name="product rating"
+          editing={true}
+          starCount={5}
+          value={this.state.rating}
+          onStarClick={this.updateRating}
+        />
+        <br/>
         <textarea id='review'></textarea>
-          <select name="Rating" id='rating'>
-            <option value='1'>1</option>
-            <option value='2'>2</option>
-            <option value='3'>3</option>
-            <option value='4'>4</option>
-            <option value='5'>5</option>
-          </select>
+        <br/>
         <button onClick={this.addReview}>
 
           Add Review</button>
