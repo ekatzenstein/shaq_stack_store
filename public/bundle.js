@@ -31081,8 +31081,9 @@
 	  }, {
 	    key: 'addReview',
 	    value: function addReview(evt) {
-	      var review = document.getElementById('review').value;
-	      _axios2.default.post('/api/reviews', { rating: 5, review_text: review, product_id: this.props.params.productId }).then(function (res) {
+	      var review_text = document.getElementById('review').value;
+	      var rating = document.getElementById('rating').value;
+	      _axios2.default.post('/api/reviews', { rating: rating, review_text: review_text, product_id: this.props.params.productId }).then(function (res) {
 	        return res.data;
 	      }).then(function (review) {
 	        console.log(review);
@@ -31235,6 +31236,35 @@
 	          );
 	        }),
 	        _react2.default.createElement('textarea', { id: 'review' }),
+	        _react2.default.createElement(
+	          'select',
+	          { name: 'Rating', id: 'rating' },
+	          _react2.default.createElement(
+	            'option',
+	            { value: '1' },
+	            '1'
+	          ),
+	          _react2.default.createElement(
+	            'option',
+	            { value: '2' },
+	            '2'
+	          ),
+	          _react2.default.createElement(
+	            'option',
+	            { value: '3' },
+	            '3'
+	          ),
+	          _react2.default.createElement(
+	            'option',
+	            { value: '4' },
+	            '4'
+	          ),
+	          _react2.default.createElement(
+	            'option',
+	            { value: '5' },
+	            '5'
+	          )
+	        ),
 	        _react2.default.createElement(
 	          'button',
 	          { onClick: this.addReview },

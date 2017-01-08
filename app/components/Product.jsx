@@ -43,8 +43,9 @@ export default class Product extends Component {
   }
 
   addReview(evt) {
-    const review = document.getElementById('review').value;
-    axios.post(`/api/reviews`,{rating: 5, review_text: review,product_id:this.props.params.productId})
+    const review_text = document.getElementById('review').value;
+    const rating = document.getElementById('rating').value;
+    axios.post(`/api/reviews`,{rating, review_text, product_id:this.props.params.productId})
     .then(res=>res.data)
     .then(review=>{
       console.log(review)
@@ -102,6 +103,13 @@ export default class Product extends Component {
           </div>
         ))}
         <textarea id='review'></textarea>
+          <select name="Rating" id='rating'>
+            <option value='1'>1</option>
+            <option value='2'>2</option>
+            <option value='3'>3</option>
+            <option value='4'>4</option>
+            <option value='5'>5</option>
+          </select>
         <button onClick={this.addReview}>
 
           Add Review</button>
