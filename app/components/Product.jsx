@@ -15,6 +15,7 @@ export default class Product extends Component {
     };
     this.addReview=this.addReview.bind(this);
     this.updateRating=this.updateRating.bind(this);
+    this.handleClick=this.handleClick.bind(this);
 
   }
 
@@ -44,7 +45,14 @@ export default class Product extends Component {
     }
 
   handleClick(evt) {
-    console.log('clicked cart');
+    evt.preventDefault();
+    console.log('clicked cart, product: ', this.state.product);
+    axios.post('/api/orders/cart/', {
+      product_id: this.state.product.id,
+      quantity: 1
+    })
+    .then(res => console.log(res.data))
+    .catch(err=> console.log(err));
   }
 
   addReview(evt) {

@@ -4,6 +4,7 @@ const epilogue = require('./epilogue')
 const db = require('APP/db');
 const Order = require('APP/db/models/orders');
 const OrderItem = require('APP/db/models/orderItem');
+const Product = require('APP/db/models/products');
 
 const customUserRoutes = require('express').Router() 
 
@@ -50,3 +51,44 @@ customUserRoutes.post('/',function(req, res, next){
 
 });
 
+customUserRoutes.post('/cart', function(req,res,next) {
+	console.log('trying to add item to cart, with: ', req.body);
+	
+	if (!req.session.cart)
+		req.session.cart = [];
+	
+	req.session.cart.push(req.body);
+	console.log('req obj: ', req.session);
+
+	res.status(200).send();
+});
+
+customUserRoutes.get('/cart', function(req,res,next) {
+	console.log('trying to fetch cart items: ');
+
+	
+
+	// if (!req.session.cart)
+	// 	res.sendStatus(200);
+
+	var dummyArr = [{ product_id: 2, quantity: 1 },
+	     { product_id: 3, quantity: 1 },
+	     { product_id: 4, quantity: 1 } ].map(item=>item.product_id);
+
+	console.log('dummy: ', dummyArr);
+
+	Product.findAll({
+		where: {
+			id: {
+				$in: dummyArr
+			}
+		}
+	})
+	.then(result=>{
+		console.log(result);
+		res.status(200).send(result);
+		})
+	.catch(next);
+
+	
+});
