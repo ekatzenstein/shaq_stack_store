@@ -33,7 +33,7 @@ if (!reasonableName.test(pkg.name)) {
 const env = Object.create(process.env)
   , secretsFile = resolve(env.HOME, `.${pkg.name}.env`)
 try {
-  Object.assign(env, require(secretsFile))
+  Object.assign(process.env, env, require(secretsFile))
 } catch (error) {
   debug('%s: %s', secretsFile, error.message)
   debug('%s: env file not found or invalid, moving on', secretsFile)  
