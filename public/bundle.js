@@ -30806,8 +30806,12 @@
 	    var _this = _possibleConstructorReturn(this, (Products.__proto__ || Object.getPrototypeOf(Products)).call(this));
 	
 	    _this.state = {
-	      products: []
+	      products: [],
+	      categories: ['Clothes'],
+	      search: ''
 	    };
+	    _this._categoryChange = _this._categoryChange.bind(_this);
+	    _this._searchProduct = _this._searchProduct.bind(_this);
 	    return _this;
 	  }
 	
@@ -30817,7 +30821,6 @@
 	      var _this2 = this;
 	
 	      //this.nextJoke()
-	      console.log('tried mounting');
 	      _axios2.default.get('/api/products').then(function (res) {
 	        return res.data;
 	      }).then(function (products) {
@@ -30825,71 +30828,116 @@
 	      });
 	    }
 	  }, {
+	    key: '_categoryChange',
+	    value: function _categoryChange(e) {
+	      this.setState({ categories: [e.target.value] });
+	    }
+	  }, {
+	    key: '_searchProduct',
+	    value: function _searchProduct(e) {
+	      this.setState({ search: e.target.value.toLowerCase() });
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var products = this.state.products && this.state.products.map(function (product) {
+	      var _this3 = this;
+	
+	      var products = this.state.products && this.state.products.filter(function (product) {
+	        return product.category.filter(function (cat) {
+	          return _this3.state.categories.indexOf(cat) !== -1;
+	        }).length > 0 && (product.title + '-' + product.description).toLowerCase().indexOf(_this3.state.search) !== -1;
+	      }).map(function (product) {
 	        return _react2.default.createElement(
 	          'tr',
 	          { key: product.id },
 	          _react2.default.createElement(
-	            _reactRouter.Link,
-	            { to: '/products/' + product.id },
+	            'td',
+	            null,
+	            ' ',
 	            _react2.default.createElement(
-	              'td',
-	              null,
-	              ' ',
-	              product.title,
-	              ' '
+	              _reactRouter.Link,
+	              { to: '/products/' + product.id },
+	              product.title
 	            ),
-	            _react2.default.createElement(
-	              'td',
-	              null,
-	              ' ',
-	              product.category.join(', '),
-	              ' '
-	            ),
-	            _react2.default.createElement(
-	              'td',
-	              null,
-	              ' ',
-	              product.photo_url,
-	              ' '
-	            ),
-	            _react2.default.createElement(
-	              'td',
-	              null,
-	              ' ',
-	              product.current_price,
-	              ' '
-	            ),
-	            _react2.default.createElement(
-	              'td',
-	              null,
-	              ' ',
-	              product.description,
-	              ' '
-	            ),
-	            _react2.default.createElement(
-	              'td',
-	              null,
-	              ' ',
-	              product.availability,
-	              ' '
-	            ),
-	            _react2.default.createElement(
-	              'td',
-	              null,
-	              ' ',
-	              product.inventory,
-	              ' '
-	            )
+	            ' '
+	          ),
+	          _react2.default.createElement(
+	            'td',
+	            null,
+	            ' ',
+	            product.category.join(', '),
+	            ' '
+	          ),
+	          _react2.default.createElement(
+	            'td',
+	            null,
+	            ' ',
+	            product.photo_url,
+	            ' '
+	          ),
+	          _react2.default.createElement(
+	            'td',
+	            null,
+	            ' ',
+	            product.current_price,
+	            ' '
+	          ),
+	          _react2.default.createElement(
+	            'td',
+	            null,
+	            ' ',
+	            product.description,
+	            ' '
+	          ),
+	          _react2.default.createElement(
+	            'td',
+	            null,
+	            ' ',
+	            product.availability,
+	            ' '
+	          ),
+	          _react2.default.createElement(
+	            'td',
+	            null,
+	            ' ',
+	            product.inventory,
+	            ' '
 	          )
 	        );
 	      });
-	      console.log('product: ', products);
 	      return _react2.default.createElement(
 	        'div',
 	        null,
+	        _react2.default.createElement('input', { name: 'Search', onChange: this._searchProduct }),
+	        _react2.default.createElement(
+	          'select',
+	          { name: 'Categories', onChange: this._categoryChange },
+	          _react2.default.createElement(
+	            'option',
+	            { value: 'Clothes' },
+	            'Clothes'
+	          ),
+	          _react2.default.createElement(
+	            'option',
+	            { value: 'Accessories' },
+	            'Accessories'
+	          ),
+	          _react2.default.createElement(
+	            'option',
+	            { value: 'Athletics' },
+	            'Athletics'
+	          ),
+	          _react2.default.createElement(
+	            'option',
+	            { value: 'Beauty' },
+	            'Beauty'
+	          ),
+	          _react2.default.createElement(
+	            'option',
+	            { value: 'Shoes' },
+	            'Shoes'
+	          )
+	        ),
 	        _react2.default.createElement(
 	          'h1',
 	          null,
@@ -30899,45 +30947,49 @@
 	          'table',
 	          null,
 	          _react2.default.createElement(
-	            'tr',
+	            'tbody',
 	            null,
 	            _react2.default.createElement(
-	              'th',
+	              'tr',
 	              null,
-	              ' title '
+	              _react2.default.createElement(
+	                'th',
+	                null,
+	                ' title '
+	              ),
+	              _react2.default.createElement(
+	                'th',
+	                null,
+	                ' category '
+	              ),
+	              _react2.default.createElement(
+	                'th',
+	                null,
+	                ' photo_url '
+	              ),
+	              _react2.default.createElement(
+	                'th',
+	                null,
+	                ' current_price '
+	              ),
+	              _react2.default.createElement(
+	                'th',
+	                null,
+	                ' description '
+	              ),
+	              _react2.default.createElement(
+	                'th',
+	                null,
+	                ' availability '
+	              ),
+	              _react2.default.createElement(
+	                'th',
+	                null,
+	                ' inventory '
+	              )
 	            ),
-	            _react2.default.createElement(
-	              'th',
-	              null,
-	              ' category '
-	            ),
-	            _react2.default.createElement(
-	              'th',
-	              null,
-	              ' photo_url '
-	            ),
-	            _react2.default.createElement(
-	              'th',
-	              null,
-	              ' current_price '
-	            ),
-	            _react2.default.createElement(
-	              'th',
-	              null,
-	              ' description '
-	            ),
-	            _react2.default.createElement(
-	              'th',
-	              null,
-	              ' availability '
-	            ),
-	            _react2.default.createElement(
-	              'th',
-	              null,
-	              ' inventory '
-	            )
-	          ),
-	          products
+	            products
+	          )
 	        )
 	      );
 	    }
@@ -30987,7 +31039,8 @@
 	    var _this = _possibleConstructorReturn(this, (Product.__proto__ || Object.getPrototypeOf(Product)).call(this, props));
 	
 	    _this.state = {
-	      product: {}
+	      product: {},
+	      reviews: []
 	    };
 	
 	    return _this;
@@ -30999,7 +31052,18 @@
 	      var _this2 = this;
 	
 	      //this.nextJoke()
-	      console.log('getting product details');
+	      _axios2.default.get('/api/reviews/' + this.props.params.productId).then(function (res) {
+	        console.log('');
+	        console.log(res.data);
+	        console.log('');
+	        return res.data;
+	      }).then(function (review) {
+	        _this2.setState({ reviews: [review] });
+	      }).catch(function (error) {
+	        console.log(error);
+	      });
+	
+	      //  console.log('getting product details');
 	      _axios2.default.get('/api/products/' + this.props.params.productId).then(function (res) {
 	        return res.data;
 	      }).then(function (product) {
@@ -31132,6 +31196,29 @@
 	            productComponent
 	          )
 	        ),
+	        this.state.reviews.map(function (review, i) {
+	          return _react2.default.createElement(
+	            'div',
+	            { key: i },
+	            _react2.default.createElement(
+	              'h3',
+	              null,
+	              review.rating,
+	              '/5'
+	            ),
+	            _react2.default.createElement(
+	              'span',
+	              null,
+	              review.updated_at
+	            ),
+	            _react2.default.createElement('br', null),
+	            _react2.default.createElement(
+	              'p',
+	              null,
+	              review.review_text
+	            )
+	          );
+	        }),
 	        _react2.default.createElement(
 	          'button',
 	          { onClick: this.handleClick },
@@ -31147,7 +31234,7 @@
 	// const product = this.props.product && (() => {
 	//   return (
 	//     <tr key={product.id}>
-	//     <td> {product.title} </td> 
+	//     <td> {product.title} </td>
 	//     <td> {product.category.join(', ')} </td>
 	//     <td> {product.photo_url} </td>
 	//     <td> {product.current_price} </td>

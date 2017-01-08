@@ -18,17 +18,14 @@ const Review = db.define('reviews', {
   },
 
   review_text: {
-  	type: Sequelize.TEXT
+  	type: Sequelize.TEXT,
   	allowNull: false,
   	defaultValue: null,
   	validate: {
   		notEmpty: true,
   	}
-  },  
-  
-
-
-}
+  }
+})
 
 module.exports = Review;
 
@@ -36,5 +33,5 @@ module.exports = Review;
 // reviews_id (pk)
 // users_id (fk)
 // product_id (fk)
-// review_text 
+// review_text
 // ratings - default value 0
