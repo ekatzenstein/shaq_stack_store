@@ -80,6 +80,10 @@
 	
 	var _Product2 = _interopRequireDefault(_Product);
 	
+	var _Cart = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./components/Cart\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+	
+	var _Cart2 = _interopRequireDefault(_Cart);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var ExampleApp = (0, _reactRedux.connect)(function (_ref) {
@@ -111,7 +115,8 @@
 	      { path: '/', component: ExampleApp },
 	      _react2.default.createElement(_reactRouter.IndexRedirect, { to: '/products' }),
 	      _react2.default.createElement(_reactRouter.Route, { path: '/products', component: _Products2.default }),
-	      _react2.default.createElement(_reactRouter.Route, { path: '/products/:productId', component: _Product2.default })
+	      _react2.default.createElement(_reactRouter.Route, { path: '/products/:productId', component: _Product2.default }),
+	      _react2.default.createElement(_reactRouter.Route, { path: '/cart', component: _Cart2.default })
 	    )
 	  )
 	), document.getElementById('main'));
