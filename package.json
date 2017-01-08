@@ -9,9 +9,9 @@
     "build": "check-node-version --node '>= 6.7.0' && bin/setup && webpack",
     "build-watch": "check-node-version --node '>= 6.7.0' && bin/setup && webpack -w",
     "start": "check-node-version --node '>= 6.7.0' && bin/setup && DATABASE_URL=postgres://localhost/graceshopper nodemon server/start.js",
-    "start:eric": "check-node-version --node '>= 6.7.0' && bin/setup && DATABASE_URL=postgres://erick:mypassword123@localhost:5432/graceshopper nodemon server/start.js",
+    "start-e": "check-node-version --node '>= 6.7.0' && bin/setup && DATABASE_URL=postgres://erick:mypassword123@localhost:5432/graceshopper nodemon server/start.js",
     "seed": "DATABASE_URL=postgres://localhost/graceshopper node db/seed.js",
-    "seed:eric": "DATABASE_URL=postgres://erick:mypassword123@localhost:5432/graceshopper node db/seed.js"
+    "seed-e": "DATABASE_URL=postgres://erick:mypassword123@localhost:5432/graceshopper node db/seed.js"
   },
   "repository": {
     "type": "git",
@@ -52,6 +52,7 @@
     "react-dom": "^15.3.2",
     "react-redux": "^4.4.5",
     "react-router": "^3.0.0",
+    "react-star-rating-component": "^1.2.2",
     "redux": "^3.6.0",
     "redux-logger": "^2.7.0",
     "redux-thunk": "^2.1.0",

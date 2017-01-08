@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import StarRatingComponent from 'react-star-rating-component';
 
 const testArr = [{title: 'test'}];
 export default class Product extends Component {
@@ -8,9 +9,12 @@ export default class Product extends Component {
     super(props);
     this.state = {
       product: {},
-      reviews:[]
-    };
+      userReviews:[],
+      rating:3
 
+    };
+    this.addReview=this.addReview.bind(this);
+    this.updateRating=this.updateRating.bind(this);
 
   }
 
@@ -35,21 +39,37 @@ export default class Product extends Component {
    });
 
   }
+  updateRating(nextValue, prevValue, name) {
+      this.setState({rating: nextValue});
+    }
 
   handleClick(evt) {
     console.log('clicked cart');
   }
 
+  addReview(evt) {
+    let review_text = document.getElementById('review').value;
+    review_text = review_text==='' ? 'no input text' : review_text;
+    const rating = this.state.rating;
+    const review ={rating, review_text, product_id:this.props.params.productId};
+    axios.post(`/api/reviews`,review)
+    .then(res=>res.data)
+    .then(userReview=>{
+      this.setState({userReviews:[...this.state.userReviews,userReview]})
+
+    })
+    .catch(err=>{console.log(err)})
+  }
+
 
 
   render() {
-    {console.log(this)}
-    //const product = this.state.product;
 
     const product = this.state.product;
 
-    const productComponent = Object.keys(product).length>0 ?
-      (
+
+    const reviews = this.state.product.reviews && this.state.userReviews.length>0 ? [...this.state.product.reviews,...this.state.userReviews] : this.state.product.reviews;
+    const productComponent = Object.keys(product).length>0 ?  (
       <tr key={product.id}>
       <td> {product.title} </td>
       <td> {product.category.join(', ')} </td>
@@ -62,7 +82,6 @@ export default class Product extends Component {
       ) :
       null;
 
-    console.log('product: ',product);
     return (
       <div >
         <h1>PRODUCT</h1>
@@ -84,13 +103,29 @@ export default class Product extends Component {
         </tbody>
 
         </table>
-        {this.state.product.reviews && this.state.product.reviews.map((review,i)=>(
+        <button onClick={this.handleClick}>Add to Cart</button>
+        {this.state.product.reviews && reviews.map((review,i)=>(
           <div key={i}><h3>{review.rating}/5</h3><span>{review.updated_at}</span><br/>
           <p>{review.review_text}</p>
           </div>
         ))}
-        <button onClick={this.handleClick}>Add to Cart</button>
-        
+        <StarRatingComponent
+          name="product rating"
+          editing={true}
+          starCount={5}
+          value={this.state.rating}
+          onStarClick={this.updateRating}
+        />
+        <br/>
+        <textarea id='review'></textarea>
+        <br/>
+        <button onClick={this.addReview}>
+
+          Add Review</button>
+        <br/>
+
+
+
       </div>
     )
   }
@@ -110,5 +145,3 @@ export default class Product extends Component {
 //     </tr>
 //   )
 // });
-
-
