@@ -11,7 +11,7 @@ import WhoAmI from './components/WhoAmI'
 
 import Products from './components/Products';
 import Product from './components/Product';
-
+import Signup from './components/signUp'
 
 
 const ExampleApp = connect(
@@ -33,6 +33,7 @@ render (
         <IndexRedirect to="/products" />
         <Route path="/products" component={Products} />
         <Route path="/products/:productId" component={Product}/>
+        <Route path="/signup" component={Signup}/>
       </Route>
     </Router>
   </Provider>,

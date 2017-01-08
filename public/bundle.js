@@ -80,6 +80,10 @@
 	
 	var _Product2 = _interopRequireDefault(_Product);
 	
+	var _signUp = __webpack_require__(301);
+	
+	var _signUp2 = _interopRequireDefault(_signUp);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var ExampleApp = (0, _reactRedux.connect)(function (_ref) {
@@ -111,7 +115,8 @@
 	      { path: '/', component: ExampleApp },
 	      _react2.default.createElement(_reactRouter.IndexRedirect, { to: '/products' }),
 	      _react2.default.createElement(_reactRouter.Route, { path: '/products', component: _Products2.default }),
-	      _react2.default.createElement(_reactRouter.Route, { path: '/products/:productId', component: _Product2.default })
+	      _react2.default.createElement(_reactRouter.Route, { path: '/products/:productId', component: _Product2.default }),
+	      _react2.default.createElement(_reactRouter.Route, { path: '/signup', component: _signUp2.default })
 	    )
 	  )
 	), document.getElementById('main'));
@@ -31247,6 +31252,135 @@
 	
 	
 	exports.default = Product;
+
+/***/ },
+/* 301 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRouter = __webpack_require__(32);
+	
+	var _axios = __webpack_require__(264);
+	
+	var _axios2 = _interopRequireDefault(_axios);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var Signup = function (_Component) {
+	  _inherits(Signup, _Component);
+	
+	  function Signup() {
+	    _classCallCheck(this, Signup);
+	
+	    var _this = _possibleConstructorReturn(this, (Signup.__proto__ || Object.getPrototypeOf(Signup)).call(this));
+	
+	    _this.state = {
+	      name: '',
+	      email: '',
+	      password: ''
+	    };
+	
+	    _this.handleChange = _this.handleChange.bind(_this);
+	    _this.createUser = _this.createUser.bind(_this);
+	
+	    return _this;
+	  }
+	
+	  _createClass(Signup, [{
+	    key: 'handleChange',
+	    value: function handleChange(event) {
+	      var typeOfInput = event.target.getAttribute('name');
+	      if (typeOfInput === 'name') {
+	        console.log(event.target.value);
+	        this.setState({ name: event.target.value });
+	      } else if (typeOfInput === 'email') {
+	        this.setState({ email: event.target.value });
+	      } else {
+	        this.setState({ password: event.target.value });
+	      }
+	    }
+	  }, {
+	    key: 'createUser',
+	    value: function createUser(e) {
+	      e.preventDefault();
+	      console.log('new user');
+	      console.log(this.state);
+	
+	      var newUser = this.state;
+	
+	      _axios2.default.post('/api/users', newUser).then(function (res) {
+	        return console.log(res);
+	      });
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(
+	          'h1',
+	          null,
+	          'Sign Up'
+	        ),
+	        _react2.default.createElement(
+	          'form',
+	          null,
+	          _react2.default.createElement(
+	            'label',
+	            null,
+	            'Name:'
+	          ),
+	          _react2.default.createElement('input', { name: 'name', type: 'text', onChange: this.handleChange
+	
+	          }),
+	          _react2.default.createElement('br', null),
+	          _react2.default.createElement(
+	            'label',
+	            null,
+	            'Email'
+	          ),
+	          _react2.default.createElement('input', { name: 'email', type: 'text', onChange: this.handleChange }),
+	          _react2.default.createElement('br', null),
+	          _react2.default.createElement(
+	            'label',
+	            null,
+	            'Password'
+	          ),
+	          _react2.default.createElement('input', { name: 'password', type: 'text', onChange: this.handleChange }),
+	          _react2.default.createElement('br', null),
+	          _react2.default.createElement(
+	            'button',
+	            { onClick: this.createUser },
+	            'Sign up'
+	          )
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return Signup;
+	}(_react.Component);
+	
+	exports.default = Signup;
 
 /***/ }
 /******/ ]);

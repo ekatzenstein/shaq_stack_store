@@ -15,6 +15,8 @@ const users = epilogue.resource({
   endpoints: ['/users', '/users/:id']
 })
 
+
+
 const {mustBeLoggedIn, selfOnly, forbidden} = epilogue.filters
 users.delete.auth(mustBeLoggedIn)
 users.delete.auth(selfOnly('delete'))
