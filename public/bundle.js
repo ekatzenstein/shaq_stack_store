@@ -31020,11 +31020,13 @@
 	
 	var _axios2 = _interopRequireDefault(_axios);
 	
-	var _reactStarRatingComponent = __webpack_require__(305);
+	var _reactStarRatingComponent = __webpack_require__(301);
 	
 	var _reactStarRatingComponent2 = _interopRequireDefault(_reactStarRatingComponent);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -31044,8 +31046,7 @@
 	
 	    _this.state = {
 	      product: {},
-	      reviews: [],
-	      review: '',
+	      userReviews: [],
 	      rating: 3
 	
 	    };
@@ -31092,13 +31093,16 @@
 	  }, {
 	    key: 'addReview',
 	    value: function addReview(evt) {
+	      var _this3 = this;
+	
 	      var review_text = document.getElementById('review').value;
 	      review_text = review_text === '' ? 'no input text' : review_text;
 	      var rating = this.state.rating;
-	      _axios2.default.post('/api/reviews', { rating: rating, review_text: review_text, product_id: this.props.params.productId }).then(function (res) {
+	      var review = { rating: rating, review_text: review_text, product_id: this.props.params.productId };
+	      _axios2.default.post('/api/reviews', review).then(function (res) {
 	        return res.data;
-	      }).then(function (review) {
-	        console.log(review);
+	      }).then(function (userReview) {
+	        _this3.setState({ userReviews: [].concat(_toConsumableArray(_this3.state.userReviews), [userReview]) });
 	      }).catch(function (err) {
 	        console.log(err);
 	      });
@@ -31109,6 +31113,7 @@
 	
 	      var product = this.state.product;
 	
+	      var reviews = this.state.product.reviews && this.state.userReviews.length > 0 ? [].concat(_toConsumableArray(this.state.product.reviews), _toConsumableArray(this.state.userReviews)) : this.state.product.reviews;
 	      var productComponent = Object.keys(product).length > 0 ? _react2.default.createElement(
 	        'tr',
 	        { key: product.id },
@@ -31163,7 +31168,6 @@
 	        )
 	      ) : null;
 	
-	      console.log('product: ', product);
 	      return _react2.default.createElement(
 	        'div',
 	        null,
@@ -31225,7 +31229,7 @@
 	          { onClick: this.handleClick },
 	          'Add to Cart'
 	        ),
-	        this.state.product.reviews && this.state.product.reviews.map(function (review, i) {
+	        this.state.product.reviews && reviews.map(function (review, i) {
 	          return _react2.default.createElement(
 	            'div',
 	            { key: i },
@@ -31289,11 +31293,7 @@
 	exports.default = Product;
 
 /***/ },
-/* 301 */,
-/* 302 */,
-/* 303 */,
-/* 304 */,
-/* 305 */
+/* 301 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -31308,7 +31308,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _classnames = __webpack_require__(306);
+	var _classnames = __webpack_require__(302);
 	
 	var _classnames2 = _interopRequireDefault(_classnames);
 	
@@ -31494,7 +31494,7 @@
 
 
 /***/ },
-/* 306 */
+/* 302 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!

@@ -9,8 +9,7 @@ export default class Product extends Component {
     super(props);
     this.state = {
       product: {},
-      reviews:[],
-      review:'',
+      userReviews:[],
       rating:3
 
     };
@@ -52,10 +51,12 @@ export default class Product extends Component {
     let review_text = document.getElementById('review').value;
     review_text = review_text==='' ? 'no input text' : review_text;
     const rating = this.state.rating;
-    axios.post(`/api/reviews`,{rating, review_text, product_id:this.props.params.productId})
+    const review ={rating, review_text, product_id:this.props.params.productId};
+    axios.post(`/api/reviews`,review)
     .then(res=>res.data)
-    .then(review=>{
-      console.log(review)
+    .then(userReview=>{
+      this.setState({userReviews:[...this.state.userReviews,userReview]})
+
     })
     .catch(err=>{console.log(err)})
   }
@@ -66,8 +67,9 @@ export default class Product extends Component {
 
     const product = this.state.product;
 
-    const productComponent = Object.keys(product).length>0 ?
-      (
+
+    const reviews = this.state.product.reviews && this.state.userReviews.length>0 ? [...this.state.product.reviews,...this.state.userReviews] : this.state.product.reviews;
+    const productComponent = Object.keys(product).length>0 ?  (
       <tr key={product.id}>
       <td> {product.title} </td>
       <td> {product.category.join(', ')} </td>
@@ -80,7 +82,6 @@ export default class Product extends Component {
       ) :
       null;
 
-    console.log('product: ',product);
     return (
       <div >
         <h1>PRODUCT</h1>
@@ -103,7 +104,7 @@ export default class Product extends Component {
 
         </table>
         <button onClick={this.handleClick}>Add to Cart</button>
-        {this.state.product.reviews && this.state.product.reviews.map((review,i)=>(
+        {this.state.product.reviews && reviews.map((review,i)=>(
           <div key={i}><h3>{review.rating}/5</h3><span>{review.updated_at}</span><br/>
           <p>{review.review_text}</p>
           </div>
