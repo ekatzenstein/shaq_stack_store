@@ -31040,8 +31040,11 @@
 	
 	    _this.state = {
 	      product: {},
-	      reviews: []
+	      reviews: [],
+	      review: ''
+	
 	    };
+	    _this.addReview = _this.addReview.bind(_this);
 	
 	    return _this;
 	  }
@@ -31074,6 +31077,18 @@
 	    key: 'handleClick',
 	    value: function handleClick(evt) {
 	      console.log('clicked cart');
+	    }
+	  }, {
+	    key: 'addReview',
+	    value: function addReview(evt) {
+	      var review = document.getElementById('review').value;
+	      _axios2.default.post('/api/reviews', { rating: 5, review_text: review, product_id: this.props.params.productId }).then(function (res) {
+	        return res.data;
+	      }).then(function (review) {
+	        console.log(review);
+	      }).catch(function (err) {
+	        console.log(err);
+	      });
 	    }
 	  }, {
 	    key: 'render',
@@ -31219,6 +31234,13 @@
 	            )
 	          );
 	        }),
+	        _react2.default.createElement('textarea', { id: 'review' }),
+	        _react2.default.createElement(
+	          'button',
+	          { onClick: this.addReview },
+	          'Add Review'
+	        ),
+	        _react2.default.createElement('br', null),
 	        _react2.default.createElement(
 	          'button',
 	          { onClick: this.handleClick },

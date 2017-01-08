@@ -8,9 +8,11 @@ export default class Product extends Component {
     super(props);
     this.state = {
       product: {},
-      reviews:[]
-    };
+      reviews:[],
+      review:''
 
+    };
+    this.addReview=this.addReview.bind(this);
 
   }
 
@@ -38,6 +40,16 @@ export default class Product extends Component {
 
   handleClick(evt) {
     console.log('clicked cart');
+  }
+
+  addReview(evt) {
+    const review = document.getElementById('review').value;
+    axios.post(`/api/reviews`,{rating: 5, review_text: review,product_id:this.props.params.productId})
+    .then(res=>res.data)
+    .then(review=>{
+      console.log(review)
+    })
+    .catch(err=>{console.log(err)})
   }
 
 
@@ -89,8 +101,14 @@ export default class Product extends Component {
           <p>{review.review_text}</p>
           </div>
         ))}
+        <textarea id='review'></textarea>
+        <button onClick={this.addReview}>
+
+          Add Review</button>
+        <br/>
+
         <button onClick={this.handleClick}>Add to Cart</button>
-        
+
       </div>
     )
   }
@@ -110,5 +128,3 @@ export default class Product extends Component {
 //     </tr>
 //   )
 // });
-
-
