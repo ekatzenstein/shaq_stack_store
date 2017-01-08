@@ -9,15 +9,19 @@ const User = require('./user')
 const Product = require('./products')
 const Review = require('./reviews');
 const Order = require('./orders');
+const OrderItem = require('./orderItem');
 
-module.exports = {User, Product, Review, Order};
+module.exports = {User, Product, Review, Order, OrderItem};
 
 User.hasMany(Order);
 Order.belongsTo(User);
 
 
-Product.belongsToMany(Order, {through: 'OrderProduct'});
-Order.belongsToMany(Product, {through: 'OrderProduct'});
+Product.belongsToMany(Order, {through: 'orderItems'});
+Order.belongsToMany(Product, {through: 'orderItems'});
+
+OrderItem.belongsTo(Order);
+OrderItem.belongsTo(Product);
 
 Product.hasMany(Review);
 User.hasMany(Review);
