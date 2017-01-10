@@ -45,6 +45,7 @@ export default class Product extends Component {
     }
 
   handleClick(evt) {
+    
     evt.preventDefault();
     console.log('clicked cart, product: ', this.state.product);
     axios.post('/api/orders/cart/', {

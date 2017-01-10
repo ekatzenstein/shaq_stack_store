@@ -6,7 +6,7 @@ const Order = require('APP/db/models/orders');
 const OrderItem = require('APP/db/models/orderItem');
 const Product = require('APP/db/models/products');
 
-const customUserRoutes = require('express').Router() 
+const customUserRoutes = require('express').Router()
 
 // Custom routes go here.
 
@@ -23,18 +23,18 @@ module.exports = customUserRoutes
 customUserRoutes.post('/',function(req, res, next){
 
 	const cart = req.body.cart;
-	console.log('cart is: ', cart);
+	// console.log('cart is: ', cart);
 	Order.create(req.body)
 	.then(order => {
 		var cartWithOrderId = cart.map(
-			function(item) 
-			{ 	
-				
-				var obj = 
+			function(item)
+			{
+
+				var obj =
 					{
-						price: item.product.current_price, 
-						quantity: item.quantity, 
-						product_id: item.product.product_id, 
+						price: item.product.current_price,
+						quantity: item.quantity,
+						product_id: item.product.id,
 						order_id: order.id
 					}
 
@@ -52,43 +52,37 @@ customUserRoutes.post('/',function(req, res, next){
 });
 
 customUserRoutes.post('/cart', function(req,res,next) {
-	console.log('trying to add item to cart, with: ', req.body);
-	
-	if (!req.session.cart)
+	if (!Array.isArray(req.session.cart))
 		req.session.cart = [];
-	
 	req.session.cart.push(req.body);
-	console.log('req obj: ', req.session);
+	res.status(200).send();
+});
 
+customUserRoutes.post('/cart/empty', function(req,res,next) {
+	req.session.cart = [];
 	res.status(200).send();
 });
 
 customUserRoutes.get('/cart', function(req,res,next) {
-	console.log('trying to fetch cart items: ');
 
-	
-
-	// if (!req.session.cart)
-	// 	res.sendStatus(200);
-
-	var dummyArr = [{ product_id: 2, quantity: 1 },
-	     { product_id: 3, quantity: 1 },
-	     { product_id: 4, quantity: 1 } ].map(item=>item.product_id);
-
-	console.log('dummy: ', dummyArr);
+	var cartIdArray = req.session.cart.map(item=>item.product_id);
+	var cartQuantityArray = req.session.cart.map(item=>item.quantity);
 
 	Product.findAll({
 		where: {
 			id: {
-				$in: dummyArr
+				$in: cartIdArray
 			}
 		}
 	})
 	.then(result=>{
-		console.log(result);
-		res.status(200).send(result);
+		const productArray = result.map((p,i)=>(
+			{id:i, product:p.dataValues, quantity:cartQuantityArray[i], cost:p.current_price}
+		))
+		console.log('cart array with quantities: ',productArray);
+		res.status(200).send(productArray);
 		})
 	.catch(next);
 
-	
+
 });
