@@ -15,6 +15,7 @@ export default class Products extends Component {
     this._categoryChange = this._categoryChange.bind(this);
     this._searchProduct = this._searchProduct.bind(this);
     this.checkOut = this.checkOut.bind(this);
+    this.handleClick=this.handleClick.bind(this);
   }
   componentDidMount() {
    //this.nextJoke()
@@ -36,6 +37,21 @@ export default class Products extends Component {
   checkOut(evt){
     evt.preventDefault();
     browserHistory.push('/cart');
+  }
+
+  handleClick(evt) {
+    
+    evt.preventDefault();
+    console.log('buy product: ', evt.target.id);
+    const product_id = evt.target.id;
+    axios.post('/api/orders/cart/', {
+      product_id: product_id*1,
+      quantity: 1
+    })
+    .then(res => {
+      console.log(res.data);
+    })
+    .catch(err=> console.log(err));
   }
 
 
@@ -69,6 +85,7 @@ export default class Products extends Component {
           <td> {product.description} </td>
           <td> {product.availability} </td>
           <td> {product.inventory} </td>
+          <td><button id={`${product.id}`} onClick={this.handleClick}>Add to Cart</button></td>
 
           </tr>
         )
@@ -103,6 +120,7 @@ export default class Products extends Component {
         <th> description </th>
         <th> availability </th>
         <th> inventory </th>
+        <th> buy now </th>
 
         </tr>
         {

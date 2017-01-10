@@ -55,7 +55,7 @@ customUserRoutes.post('/cart', function(req,res,next) {
 	if (!Array.isArray(req.session.cart))
 		req.session.cart = [];
 
-	const newProductId = req.body.product_id;
+	const newProductId = req.body.product_id*1;
 
 	const indexOfNewProduct = req.session.cart.map(item => item.product_id).indexOf(newProductId);
 	console.log('indexOfNewProduct: ', indexOfNewProduct);
@@ -63,11 +63,26 @@ customUserRoutes.post('/cart', function(req,res,next) {
 	if ( indexOfNewProduct == -1)  //product doesn't exist
 		req.session.cart.push(
 			{
-				product_id: req.body.product_id,
+				product_id: req.body.product_id*1,
 				quantity: req.body.quantity*1
 			});
 	else
 		req.session.cart[indexOfNewProduct].quantity += req.body.quantity*1;
+
+	console.log('updated cart', req.session.cart);
+	res.status(200).send();
+});
+
+customUserRoutes.post('/cart/update', function(req,res,next) {
+
+	console.log('received: ', req.body);
+	req.session.cart = req.body.map(item=> {
+		return ({
+			product_id: item.product.id*1,
+			quantity: item.quantity*1
+		})
+	});
+
 
 	console.log('updated cart', req.session.cart);
 	res.status(200).send();
@@ -80,8 +95,11 @@ customUserRoutes.post('/cart/empty', function(req,res,next) {
 
 customUserRoutes.get('/cart', function(req,res,next) {
 
-	var cartIdArray = req.session.cart.map(item=>item.product_id);
-	var cartQuantityArray = req.session.cart.map(item=>item.quantity);
+	var cartIdArray = req.session.cart.map(item=>item.product_id*1);
+	var cartQuantityArray = req.session.cart.map(item=>item.quantity*1);
+
+	console.log('cartIdArray: ',cartIdArray);
+	console.log('cartQuantityArray: ', cartQuantityArray);
 
 	Product.findAll({
 		where: {
@@ -92,8 +110,8 @@ customUserRoutes.get('/cart', function(req,res,next) {
 	})
 	.then(result=>{
 		const productArray = result.map((p,i)=> {
-			console.log('p: ', p);
-			var productArrIndex = cartIdArray.indexOf(p.dataValues.id);
+			//console.log('p: ', p);
+			var productArrIndex = cartIdArray.indexOf(p.dataValues.id*1);
 			console.log('prod index: ', productArrIndex);
 			console.log('cartQuantityArray: ', cartQuantityArray);
 			console.log('qty: ', cartQuantityArray[productArrIndex]);
