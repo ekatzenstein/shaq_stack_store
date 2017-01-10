@@ -54,7 +54,22 @@ customUserRoutes.post('/',function(req, res, next){
 customUserRoutes.post('/cart', function(req,res,next) {
 	if (!Array.isArray(req.session.cart))
 		req.session.cart = [];
-	req.session.cart.push(req.body);
+
+	const newProductId = req.body.product_id;
+
+	const indexOfNewProduct = req.session.cart.map(item => item.product_id).indexOf(newProductId);
+	console.log('indexOfNewProduct: ', indexOfNewProduct);
+
+	if ( indexOfNewProduct == -1)  //product doesn't exist
+		req.session.cart.push(
+			{
+				product_id: req.body.product_id,
+				quantity: req.body.quantity*1
+			});
+	else
+		req.session.cart[indexOfNewProduct].quantity += req.body.quantity*1;
+
+	console.log('updated cart', req.session.cart);
 	res.status(200).send();
 });
 
@@ -76,9 +91,21 @@ customUserRoutes.get('/cart', function(req,res,next) {
 		}
 	})
 	.then(result=>{
-		const productArray = result.map((p,i)=>(
-			{id:i, product:p.dataValues, quantity:cartQuantityArray[i], cost:p.current_price}
-		))
+		const productArray = result.map((p,i)=> {
+			console.log('p: ', p);
+			var productArrIndex = cartIdArray.indexOf(p.dataValues.id);
+			console.log('prod index: ', productArrIndex);
+			console.log('cartQuantityArray: ', cartQuantityArray);
+			console.log('qty: ', cartQuantityArray[productArrIndex]);
+			return (
+				{
+					id:i, 
+					product:p.dataValues, 
+					quantity:cartQuantityArray[productArrIndex], 
+					cost:p.current_price * cartQuantityArray[productArrIndex]
+				}
+			)
+		});
 		console.log('cart array with quantities: ',productArray);
 		res.status(200).send(productArray);
 		})

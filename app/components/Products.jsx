@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Link} from 'react-router';
+import {Link, browserHistory} from 'react-router';
 import axios from 'axios';
 
 const testArr = [{title: 'test'}];
@@ -9,11 +9,12 @@ export default class Products extends Component {
     super();
     this.state = {
       products: [],
-      categories:['Clothes'],
+      categories:['All'],
       search:''
     };
     this._categoryChange = this._categoryChange.bind(this);
     this._searchProduct = this._searchProduct.bind(this);
+    this.checkOut = this.checkOut.bind(this);
   }
   componentDidMount() {
    //this.nextJoke()
@@ -32,33 +33,57 @@ export default class Products extends Component {
     this.setState({search:e.target.value.toLowerCase()})
   }
 
+  checkOut(evt){
+    evt.preventDefault();
+    browserHistory.push('/cart');
+  }
+
 
   render() {
+    const checkOutBtn = (<button onClick={this.checkOut}>Check Out</button>);
 
-    const products = this.state.products && this.state.products.filter(product=>{
-      return product.category.filter(cat=>{
-        return this.state.categories.indexOf(cat) !== -1
-      }).length > 0 && `${product.title}-${product.description}`.toLowerCase().indexOf(this.state.search)!==-1;
-    }).map(product => {
-      return (
-        <tr key={product.id}>
+    const products = 
+      this.state.products && 
+      this.state.products.filter( product=>
+        {
+          //filter by category
+          const condition1 = product.category.filter(cat=>{
+            return this.state.categories.indexOf(cat) !== -1
+          }).length > 0 || this.state.categories.indexOf('All') != -1; 
 
-        <td> <Link to={`/products/${product.id}`}>{product.title}</Link> </td>
-        <td> {product.category.join(', ')} </td>
-        <td> {product.photo_url} </td>
-        <td> {product.current_price} </td>
-        <td> {product.description} </td>
-        <td> {product.availability} </td>
-        <td> {product.inventory} </td>
 
-        </tr>
-      )
-    });
+          //search name of product in title and description
+          const condition2 = `${product.title}-${product.description}`.toLowerCase().indexOf(this.state.search)!==-1;  
+
+          return condition1 && condition2;
+        })
+      .map(product => 
+      {
+        return (
+          <tr key={product.id}>
+
+          <td> <Link to={`/products/${product.id}`}>{product.title}</Link> </td>
+          <td> {product.category.join(', ')} </td>
+          <td> {product.photo_url} </td>
+          <td> {product.current_price} </td>
+          <td> {product.description} </td>
+          <td> {product.availability} </td>
+          <td> {product.inventory} </td>
+
+          </tr>
+        )
+      });
+    
     return (
       <div >
+        <br />
+        Search product name and description:
         <input name="Search" onChange={this._searchProduct} />
+        <br />
 
+        Filter by category:
         <select name="Categories" onChange={this._categoryChange}>
+          <option value="All">All</option>
           <option value="Clothes">Clothes</option>
           <option value="Accessories">Accessories</option>
           <option value="Athletics">Athletics</option>
@@ -85,7 +110,13 @@ export default class Products extends Component {
         }
         </tbody>
         </table>
+        <br />
+        <br />
+        {
+          checkOutBtn
+        }
       </div>
+
     )
   }
 }

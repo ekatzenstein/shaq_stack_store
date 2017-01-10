@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import StarRatingComponent from 'react-star-rating-component';
+import {Link, browserHistory} from 'react-router';
 
 const testArr = [{title: 'test'}];
 export default class Product extends Component {
@@ -10,12 +11,17 @@ export default class Product extends Component {
     this.state = {
       product: {},
       userReviews:[],
-      rating:3
+      rating:3,
+      quantity: 1,
+      submitted: false
 
     };
     this.addReview=this.addReview.bind(this);
     this.updateRating=this.updateRating.bind(this);
     this.handleClick=this.handleClick.bind(this);
+    this.quantityChange=this.quantityChange.bind(this);
+    this.checkOut=this.checkOut.bind(this);
+    this.keepShopping=this.keepShopping.bind(this);
 
   }
 
@@ -44,15 +50,33 @@ export default class Product extends Component {
       this.setState({rating: nextValue});
     }
 
+  quantityChange(e){
+    console.log('changing quantity');
+    this.setState({quantity: e.target.value});
+  }
+
+  checkOut(evt){
+    evt.preventDefault();
+    browserHistory.push('/cart');
+  }
+
+  keepShopping(evt){
+    evt.preventDefault();
+    browserHistory.push('/');
+  }
+
   handleClick(evt) {
     
     evt.preventDefault();
     console.log('clicked cart, product: ', this.state.product);
     axios.post('/api/orders/cart/', {
       product_id: this.state.product.id,
-      quantity: 1
+      quantity: this.state.quantity
     })
-    .then(res => console.log(res.data))
+    .then(res => {
+      console.log(res.data);
+      this.setState({submitted: true});
+    })
     .catch(err=> console.log(err));
   }
 
@@ -91,6 +115,13 @@ export default class Product extends Component {
       ) :
       null;
 
+
+    const quantityInput = (<input type="number" name="quantity" value={this.state.quantity} onChange={this.quantityChange} />);
+    const buyButton = (<button onClick={this.handleClick}>Add to Cart</button>);
+    const checkOutBtn = (<button onClick={this.checkOut}>Check Out</button>);
+    const keepShoppingBtn = (<button onClick={this.keepShopping}>Keep Shopping</button>);
+      
+
     return (
       <div >
         <h1>PRODUCT</h1>
@@ -112,12 +143,29 @@ export default class Product extends Component {
         </tbody>
 
         </table>
-        <button onClick={this.handleClick}>Add to Cart</button>
+
+        {
+          quantityInput
+        }
+        {
+          buyButton
+        }
+        <br />
+        {
+          this.state.submitted && checkOutBtn
+        }
+        <br />
+        {
+          this.state.submitted && keepShoppingBtn
+        }
+
         {this.state.product.reviews && reviews.map((review,i)=>(
           <div key={i}><h3>{review.rating}/5</h3><span>{review.updated_at}</span><br/>
           <p>{review.review_text}</p>
           </div>
         ))}
+        
+
         <StarRatingComponent
           name="product rating"
           editing={true}
