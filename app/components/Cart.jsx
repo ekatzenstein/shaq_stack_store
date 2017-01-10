@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import {Link} from 'react-router';
+import {Link, browserHistory} from 'react-router';
 import axios from 'axios';
+
+
 
 // const products =
 //   [
@@ -76,8 +78,19 @@ export default class Cart extends Component {
     evt.preventDefault();
 
     axios.post('/api/orders/cart/empty')
-    .then(res => console.log(res.data))
+    .then(res => {
+      browserHistory.push('/')
+      console.log(res.data);
+    })
     .catch(err=> console.log(err));
+  }
+
+  _keepShopping(evt) {
+    evt.preventDefault();
+
+    
+    browserHistory.push('/');
+      
   }
 
   render() {
@@ -167,6 +180,7 @@ export default class Cart extends Component {
         <br />
         <br />
         <button type="submit" className="btn btn-success" onClick={this._cartClear}>Clear Cart</button>
+        <button type="submit" className="btn btn-success" onClick={this._keepShopping}>Keep Shopping</button>
         <br />
         <br />
         {

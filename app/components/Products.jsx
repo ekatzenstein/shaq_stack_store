@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Link} from 'react-router';
+import {Link, browserHistory} from 'react-router';
 import axios from 'axios';
 
 const testArr = [{title: 'test'}];
@@ -14,6 +14,7 @@ export default class Products extends Component {
     };
     this._categoryChange = this._categoryChange.bind(this);
     this._searchProduct = this._searchProduct.bind(this);
+    this.checkOut = this.checkOut.bind(this);
   }
   componentDidMount() {
    //this.nextJoke()
@@ -32,8 +33,14 @@ export default class Products extends Component {
     this.setState({search:e.target.value.toLowerCase()})
   }
 
+  checkOut(evt){
+    evt.preventDefault();
+    browserHistory.push('/cart');
+  }
+
 
   render() {
+    const checkOutBtn = (<button onClick={this.checkOut}>Check Out</button>);
 
     const products = 
       this.state.products && 
@@ -69,8 +76,12 @@ export default class Products extends Component {
     
     return (
       <div >
+        <br />
+        Search product name and description:
         <input name="Search" onChange={this._searchProduct} />
+        <br />
 
+        Filter by category:
         <select name="Categories" onChange={this._categoryChange}>
           <option value="All">All</option>
           <option value="Clothes">Clothes</option>
@@ -99,7 +110,13 @@ export default class Products extends Component {
         }
         </tbody>
         </table>
+        <br />
+        <br />
+        {
+          checkOutBtn
+        }
       </div>
+
     )
   }
 }
