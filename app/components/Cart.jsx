@@ -35,6 +35,7 @@ export default class Cart extends Component {
     this._onEmailChange = this._onEmailChange.bind(this);
     this._onAddressChange = this._onAddressChange.bind(this);
     this._editQuantity = this._editQuantity.bind(this);
+    this._handleDelete = this._handleDelete.bind(this);
   }
 
   componentDidMount(){
@@ -115,6 +116,23 @@ export default class Cart extends Component {
     .catch(err=>console.log(err));
   }
 
+  _handleDelete(evt) {
+
+    evt.preventDefault();
+    const item_id = evt.target.id;
+    const newCart = this.state.cart;
+
+    if(item_id != -1) {
+      newCart.splice(item_id, 1);
+    }
+
+    this.setState({ cart: newCart});
+
+    axios.post('/api/orders/cart/update', this.state.cart)
+    .then(res => console.log(res.data))
+    .catch(err=>console.log(err));
+  }
+
   render() {
 
     const input = this.state;
@@ -170,6 +188,7 @@ export default class Cart extends Component {
         <td> {product.description} </td>
         <td> <input name="Quantity" id={item.id} value={item.quantity}  onChange={this._editQuantity} /></td>
         <td> {cost} </td>
+        <td> <button id={`${item.id}`} onClick={this._handleDelete}>Delete</button></td>
 
         </tr>
       )
@@ -190,6 +209,7 @@ export default class Cart extends Component {
         <th> description </th>
         <th> quantity </th>
         <th> cost </th>
+        <th> delete </th>
 
 
         </tr>
