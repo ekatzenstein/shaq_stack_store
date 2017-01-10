@@ -34,6 +34,7 @@ export default class Cart extends Component {
     this._onNameChange = this._onNameChange.bind(this);
     this._onEmailChange = this._onEmailChange.bind(this);
     this._onAddressChange = this._onAddressChange.bind(this);
+    this._editQuantity = this._editQuantity.bind(this);
   }
 
   componentDidMount(){
@@ -61,7 +62,12 @@ export default class Cart extends Component {
       status: 'Created',
       cart: this.state.cart
     })
-    .then((res)=> console.log('res: ',res.data));
+    .then(()=> { return axios.post('/api/orders/cart/empty')})
+    .then((res)=> {
+      console.log('res: ',res.data);
+      this.setState({});
+      browserHistory.push('/');
+    });
   }
 
   _onNameChange(evt) {
@@ -93,12 +99,28 @@ export default class Cart extends Component {
       
   }
 
+  _editQuantity(evt) {
+
+    evt.preventDefault();
+    const item_id = evt.target.id;
+    const newVal = evt.target.value*1;
+    console.log('item: ', item_id, ' update to: ', newVal);
+
+    const newCart = this.state.cart;
+    newCart[item_id].quantity = newVal;
+    this.setState({ cart: newCart});
+
+    axios.post('/api/orders/cart/update', this.state.cart)
+    .then(res => console.log(res.data))
+    .catch(err=>console.log(err));
+  }
+
   render() {
 
     const input = this.state;
     const total = this.state.cart.reduce((prev, curr) => {
       console.log('prev is: ',prev, 'curr: ', curr);
-      return (prev + curr.cost);
+      return (prev + curr.quantity * curr.product.current_price);
     },0);
 
     const orderInfo = (
@@ -136,6 +158,8 @@ export default class Cart extends Component {
 
     const cart = this.state.cart && this.state.cart.map(item => {
       var product = item.product;
+      var cost = item.quantity * product.current_price;
+      console.log('cost is: ', cost);
       return (
         <tr key={item.id}>
 
@@ -144,8 +168,8 @@ export default class Cart extends Component {
         <td> {product.photo_url} </td>
         <td> {product.current_price} </td>
         <td> {product.description} </td>
-        <td> {item.quantity} </td>
-        <td> {item.cost} </td>
+        <td> <input name="Quantity" id={item.id} value={item.quantity}  onChange={this._editQuantity} /></td>
+        <td> {cost} </td>
 
         </tr>
       )
