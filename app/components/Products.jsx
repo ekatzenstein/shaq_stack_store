@@ -9,7 +9,7 @@ export default class Products extends Component {
     super();
     this.state = {
       products: [],
-      categories:['Clothes'],
+      categories:['All'],
       search:''
     };
     this._categoryChange = this._categoryChange.bind(this);
@@ -35,30 +35,44 @@ export default class Products extends Component {
 
   render() {
 
-    const products = this.state.products && this.state.products.filter(product=>{
-      return product.category.filter(cat=>{
-        return this.state.categories.indexOf(cat) !== -1
-      }).length > 0 && `${product.title}-${product.description}`.toLowerCase().indexOf(this.state.search)!==-1;
-    }).map(product => {
-      return (
-        <tr key={product.id}>
+    const products = 
+      this.state.products && 
+      this.state.products.filter( product=>
+        {
+          //filter by category
+          const condition1 = product.category.filter(cat=>{
+            return this.state.categories.indexOf(cat) !== -1
+          }).length > 0 || this.state.categories.indexOf('All') != -1; 
 
-        <td> <Link to={`/products/${product.id}`}>{product.title}</Link> </td>
-        <td> {product.category.join(', ')} </td>
-        <td> {product.photo_url} </td>
-        <td> {product.current_price} </td>
-        <td> {product.description} </td>
-        <td> {product.availability} </td>
-        <td> {product.inventory} </td>
 
-        </tr>
-      )
-    });
+          //search name of product in title and description
+          const condition2 = `${product.title}-${product.description}`.toLowerCase().indexOf(this.state.search)!==-1;  
+
+          return condition1 && condition2;
+        })
+      .map(product => 
+      {
+        return (
+          <tr key={product.id}>
+
+          <td> <Link to={`/products/${product.id}`}>{product.title}</Link> </td>
+          <td> {product.category.join(', ')} </td>
+          <td> {product.photo_url} </td>
+          <td> {product.current_price} </td>
+          <td> {product.description} </td>
+          <td> {product.availability} </td>
+          <td> {product.inventory} </td>
+
+          </tr>
+        )
+      });
+    
     return (
       <div >
         <input name="Search" onChange={this._searchProduct} />
 
         <select name="Categories" onChange={this._categoryChange}>
+          <option value="All">All</option>
           <option value="Clothes">Clothes</option>
           <option value="Accessories">Accessories</option>
           <option value="Athletics">Athletics</option>

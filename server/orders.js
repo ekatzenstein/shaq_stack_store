@@ -54,7 +54,18 @@ customUserRoutes.post('/',function(req, res, next){
 customUserRoutes.post('/cart', function(req,res,next) {
 	if (!Array.isArray(req.session.cart))
 		req.session.cart = [];
-	req.session.cart.push(req.body);
+
+	const newProductId = req.body.product_id;
+
+	const indexOfNewProduct = req.session.cart.map(item => item.product_id).indexOf(newProductId);
+	console.log('indexOfNewProduct: ', indexOfNewProduct);
+
+	if ( indexOfNewProduct == -1)  //product doesn't exist
+		req.session.cart.push(req.body);
+	else
+		req.session.cart[indexOfNewProduct].quantity += req.body.quantity;
+
+	console.log('updated cart', req.session.cart);
 	res.status(200).send();
 });
 
