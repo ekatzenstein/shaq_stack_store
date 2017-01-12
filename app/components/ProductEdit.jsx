@@ -2,29 +2,29 @@ import React, { Component } from 'react';
 import {Link} from 'react-router';
 import axios from 'axios';
 
-import Products from './Products';
+import Product from './Product';
 
 const orderInfo = (
   <div className="well">
-    <form className="form-horizontal" onSubmit={this._purchaseSubmit}>
+    <form className="form-horizontal">
       <fieldset>
-        <legend>New Order</legend>
+        <legend>Edit Product</legend>
         <div className="form-group">
           <label className="col-xs-2 control-label">Name</label>
           <div className="col-xs-10">
-            <input className="form-control" type="text" onChange={this._onNameChange} value={input.name}/>
+            <input className="form-control" type="text"/>
           </div>
         </div>
         <div className="form-group">
-          <label className="col-xs-2 control-label">Shipping Address</label>
+          <label className="col-xs-2 control-label">Description</label>
           <div className="col-xs-10">
-            <input className="form-control" type="text" onChange={this._onAddressChange} value={input.address}/>
+            <input className="form-control" type="text"/>
           </div>
         </div>
         <div className="form-group">
-          <label className="col-xs-2 control-label">E-mail</label>
+          <label className="col-xs-2 control-label">Other Information</label>
           <div className="col-xs-10">
-            <input className="form-control" type="text" onChange={this._onEmailChange} value={input.email}/>
+            <input className="form-control" type="text"/>
           </div>
         </div>
         <div className="form-group">
@@ -37,23 +37,29 @@ const orderInfo = (
   </div>
 );
 
-
 export default class Admin extends Component {
 
   constructor() {
     super();
     this.state = {
+      product:{}
     };
   }
   componentDidMount() {
+   //this.nextJoke()
+   console.log(this.props)
+   axios.get(`/api/admin/products/${this.props.routeParams.productId}`)
+   .then(res => res.data)
+   .then( product => {
+    this.setState({product});
+   });
   }
 
   render() {
-
+    console.log(this.state)
     return (
       <div>
-        <Products/>
-        {orderInfo}
+      {orderInfo}
       </div>
     )
   }

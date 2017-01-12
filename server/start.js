@@ -41,6 +41,11 @@ module.exports = app
   .use('/api', require('./api'))
 
   // Send index.html for anything else.
+  // .get('/admin/*', (req, res) => {
+  //   req.user.isAdmin ? res.sendFile(resolve(__dirname, '..', 'public', 'index.html')):res.sendStatus(403)
+  // })
+
+  // Send index.html for anything else.
   .get('/*', (_, res) => res.sendFile(resolve(__dirname, '..', 'public', 'index.html')))
 
 if (module === require.main) {

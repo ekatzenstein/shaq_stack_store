@@ -14,7 +14,7 @@ import Product from './components/Product';
 
 import Signup from './components/signUp'
 import Cart from './components/Cart';
-import Admin from './components/Admin';
+import ProductEdit from './components/ProductEdit';
 
 
 const ExampleApp = connect(
@@ -25,7 +25,12 @@ const ExampleApp = connect(
       <nav>
         {user ? <WhoAmI/> : <Login/>}
       </nav>
-      {React.Children.map(children,(child)=>React.cloneElement(child,{isAdmin:user&&user.isAdmin}))}
+      {
+        // React.Children.map(children,(child)=>React.cloneElement(child,{user}))
+      }
+       {
+         React.Children.map(children,(child)=>React.cloneElement(child,{isAdmin:user&&user.isAdmin}))
+       }
       {
         //children //this was replace with react.children.map above to add an 'isAdmin' prop to every page load
       }
@@ -39,9 +44,9 @@ render (
         <IndexRedirect to="/products" />
         <Route path="/products" component={Products} />
         <Route path="/products/:productId" component={Product}/>
+        <Route path="/products/:productId/edit" component={ProductEdit} />
         <Route path="/signup" component={Signup}/>
         <Route path="/cart" component={Cart} />
-        <Route path="/admin" component={Admin} />
       </Route>
     </Router>
   </Provider>,

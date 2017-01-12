@@ -87,6 +87,7 @@ export default class Products extends Component {
           <td> {product.availability} </td>
           <td> {product.inventory} </td>
           <td><button id={`${product.id}`} onClick={this.handleClick}>Add to Cart</button></td>
+          <td>{this.props.isAdmin ? <Link to={`products/${product.id}/edit`}><button>Edit Product</button></Link>:null}</td>
 
           </tr>
         )
