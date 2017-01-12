@@ -63,6 +63,14 @@ export default class Cart extends Component {
       status: 'Created',
       cart: this.state.cart
     })
+    .then(()=> { 
+      console.log('submit email!');
+      return axios.post('/api/email', {
+        name: this.state.name,
+        email: this.state.email,
+        address: this.state.address
+      });
+    })
     .then(()=> { return axios.post('/api/orders/cart/empty')})
     .then((res)=> {
       console.log('res: ',res.data);
