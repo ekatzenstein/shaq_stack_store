@@ -25,7 +25,10 @@ const ExampleApp = connect(
       <nav>
         {user ? <WhoAmI/> : <Login/>}
       </nav>
-      {children}
+      {React.Children.map(children,(child)=>React.cloneElement(child,{isAdmin:user&&user.isAdmin}))}
+      {
+        //children //this was replace with react.children.map above to add an 'isAdmin' prop to every page load
+      }
     </div>
 )
 

@@ -40,7 +40,7 @@ export default class Products extends Component {
   }
 
   handleClick(evt) {
-    
+
     evt.preventDefault();
     console.log('buy product: ', evt.target.id);
     const product_id = evt.target.id;
@@ -56,24 +56,25 @@ export default class Products extends Component {
 
 
   render() {
+    console.log(this.props)
     const checkOutBtn = (<button onClick={this.checkOut}>Check Out</button>);
 
-    const products = 
-      this.state.products && 
+    const products =
+      this.state.products &&
       this.state.products.filter( product=>
         {
           //filter by category
           const condition1 = product.category.filter(cat=>{
             return this.state.categories.indexOf(cat) !== -1
-          }).length > 0 || this.state.categories.indexOf('All') != -1; 
+          }).length > 0 || this.state.categories.indexOf('All') != -1;
 
 
           //search name of product in title and description
-          const condition2 = `${product.title}-${product.description}`.toLowerCase().indexOf(this.state.search)!==-1;  
+          const condition2 = `${product.title}-${product.description}`.toLowerCase().indexOf(this.state.search)!==-1;
 
           return condition1 && condition2;
         })
-      .map(product => 
+      .map(product =>
       {
         return (
           <tr key={product.id}>
@@ -90,7 +91,7 @@ export default class Products extends Component {
           </tr>
         )
       });
-    
+
     return (
       <div >
         <br />
