@@ -10,6 +10,7 @@ api
   .use('/products', require('./products'))
   .use('/reviews', require('./reviews'))
   .use('/orders', require('./orders'))
+  .use('/email', require('./email'))
   ;
 
 // Send along any errors
