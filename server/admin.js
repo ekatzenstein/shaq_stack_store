@@ -26,16 +26,27 @@ customAdminRoutes.use((req, res, next) => {
     }
 })
 
-customAdminRoutes.get('/products/:productId',function(req,res,next){
+customAdminRoutes.get('/products/:productId', function(req, res, next) {
     Product.findOne({
-		where: {
-			id: req.params.productId
-		}
-	}).then(result=>{
+        where: {
+            id: req.params.productId
+        }
+    }).then(result => {
         res.send(result.dataValues)
     })
 
 })
 
-customAdminRoutes.post('/', function(req, res, next) {
+customAdminRoutes.put('/products/:productId', function(req, res, next) {
+    Product.findOne({
+        where: {
+            id: req.params.productId
+        }
+    }).then(product => {
+        return product.update(req.body)
+    }).then(result => {
+        res.sendStatus(200)
+    }).catch(err=>{
+        res.send(err)
+    })
 });

@@ -66,7 +66,7 @@ export default class Product extends Component {
   }
 
   handleClick(evt) {
-    
+
     evt.preventDefault();
     console.log('clicked cart, product: ', this.state.product);
     axios.post('/api/orders/cart/', {
@@ -111,6 +111,7 @@ export default class Product extends Component {
       <td> {product.description} </td>
       <td> {product.availability} </td>
       <td> {product.inventory} </td>
+      <td>{this.props.isAdmin ? <Link to={`/products/${product.id}/edit`}><button>Edit Product</button></Link>:null}</td>
       </tr>
       ) :
       null;
@@ -120,7 +121,7 @@ export default class Product extends Component {
     const buyButton = (<button onClick={this.handleClick}>Add to Cart</button>);
     const checkOutBtn = (<button onClick={this.checkOut}>Check Out</button>);
     const keepShoppingBtn = (<button onClick={this.keepShopping}>Keep Shopping</button>);
-      
+
 
     return (
       <div >
@@ -164,7 +165,7 @@ export default class Product extends Component {
           <p>{review.review_text}</p>
           </div>
         ))}
-        
+
 
         <StarRatingComponent
           name="product rating"
