@@ -3,39 +3,7 @@ import {Link} from 'react-router';
 import axios from 'axios';
 
 import Product from './Product';
-
-const orderInfo = (
-  <div className="well">
-    <form className="form-horizontal">
-      <fieldset>
-        <legend>Edit Product</legend>
-        <div className="form-group">
-          <label className="col-xs-2 control-label">Name</label>
-          <div className="col-xs-10">
-            <input className="form-control" type="text"/>
-          </div>
-        </div>
-        <div className="form-group">
-          <label className="col-xs-2 control-label">Description</label>
-          <div className="col-xs-10">
-            <input className="form-control" type="text"/>
-          </div>
-        </div>
-        <div className="form-group">
-          <label className="col-xs-2 control-label">Other Information</label>
-          <div className="col-xs-10">
-            <input className="form-control" type="text"/>
-          </div>
-        </div>
-        <div className="form-group">
-          <div className="col-xs-10 col-xs-offset-2">
-            <button type="submit" className="btn btn-success">BUY!!</button>
-          </div>
-        </div>
-      </fieldset>
-    </form>
-  </div>
-);
+import ProductEditTable from './ProductEditTable';
 
 export default class Admin extends Component {
 
@@ -44,22 +12,32 @@ export default class Admin extends Component {
     this.state = {
       product:{}
     };
+    this.valueUpdate=this.valueUpdate.bind(this)
+    this.updateProduct=this.updateProduct.bind(this)
   }
   componentDidMount() {
-   //this.nextJoke()
-   console.log(this.props)
    axios.get(`/api/admin/products/${this.props.routeParams.productId}`)
    .then(res => res.data)
    .then( product => {
     this.setState({product});
    });
   }
+  valueUpdate(key,value){
+    //we'll want to refactor this for Redux
+    const product = Object.assign({},this.state.product)
+    product[key]=value;
+    this.setState({product})
+  }
+  updateProduct(){
+    axios.put(`/api/admin/products/${this.props.routeParams.productId}`,this.state.product)
+    .then(res => {console.log(res)});
+  }
 
   render() {
-    console.log(this.state)
     return (
       <div>
-      {orderInfo}
+        <ProductEditTable component={this.state.product} valueUpdate={this.valueUpdate}></ProductEditTable>
+        <button onClick={this.updateProduct}>Save</button>
       </div>
     )
   }
