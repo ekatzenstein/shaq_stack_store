@@ -17,6 +17,7 @@ export default class Users extends Component {
    axios.get(`/api/admin/users`)
    .then(res => res.data)
    .then( users => {
+     console.log(users)
     this.setState({users});
    });
 
@@ -64,6 +65,15 @@ export default class Users extends Component {
           <td> {user.isAdmin.toString()} </td>
           <td> {user.created_at} </td>
           <td> {user.updated_at} </td>
+          <td><button onClick={()=>{
+              axios.delete(`/api/admin/users/${user.id}`)
+                .then(res => {
+                  console.log(res)
+                })
+              }
+            }
+                >
+          delete user</button></td>
           </tr>
         )
       });

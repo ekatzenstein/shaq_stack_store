@@ -37,6 +37,18 @@ customAdminRoutes.get('/users',function(req, res, next){
 	.catch(next);
 });
 
+customAdminRoutes.delete('/users/:userId', function(req, res, next) {
+    User.destroy({
+        where: {
+            id: req.params.userId
+        }
+    }).then(result => {
+        res.sendStatus(200)
+    }).catch(err=>{
+        res.send(err)
+    })
+});
+
 customAdminRoutes.get('/orders',function(req, res, next){
 	Order.findAll()
 	.then(orders => {
@@ -56,7 +68,6 @@ customAdminRoutes.get('/products/:productId', function(req, res, next) {
     }).then(result => {
         res.send(result.dataValues)
     })
-
 })
 
 customAdminRoutes.put('/products/:productId', function(req, res, next) {
