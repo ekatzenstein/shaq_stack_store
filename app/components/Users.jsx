@@ -12,6 +12,7 @@ export default class Users extends Component {
       search:''
     };
     this._searchUser=this._searchUser.bind(this)
+    this._deleteUser=this._deleteUser.bind(this)
   }
   componentDidMount() {
    axios.get(`/api/admin/users`)
@@ -26,7 +27,16 @@ export default class Users extends Component {
   _searchUser(e){
     this.setState({search:e.target.value.toLowerCase()})
   }
+  _deleteUser(e,user,i){
+    e.preventDefault();
 
+        axios.delete(`/api/admin/users/${user.id}`)
+          .then(res => {
+            const users = [...this.state.users]
+            users.splice(i,1);
+            this.setState({users})
+          })
+  }
   handleClick(evt) {
 
     // evt.preventDefault();
@@ -54,7 +64,7 @@ export default class Users extends Component {
         const condition1 = `${stringArrayOfValues.join('-')}`.toLowerCase().indexOf(this.state.search)!==-1;
         return condition1;
       })
-      .map(user =>
+      .map((user,i) =>
       {
         return (
           <tr key={user.id}>
@@ -65,14 +75,7 @@ export default class Users extends Component {
           <td> {user.isAdmin.toString()} </td>
           <td> {user.created_at} </td>
           <td> {user.updated_at} </td>
-          <td><button onClick={()=>{
-              axios.delete(`/api/admin/users/${user.id}`)
-                .then(res => {
-                  console.log(res)
-                })
-              }
-            }
-                >
+          <td><button onClick={(event)=>this._deleteUser(event,user,i)}>
           delete user</button></td>
           </tr>
         )
