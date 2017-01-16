@@ -5,6 +5,7 @@ const db = require('APP/db');
 const Order = require('APP/db/models/orders');
 const OrderItem = require('APP/db/models/orderItem');
 const Product = require('APP/db/models/products');
+const User = require('APP/db/models/user');
 
 const customAdminRoutes = require('express').Router()
 
@@ -25,6 +26,27 @@ customAdminRoutes.use((req, res, next) => {
         res.sendStatus(403);
     }
 })
+customAdminRoutes.get('/users',function(req, res, next){
+	User.findAll()
+	.then(users => {
+		const usersReceived = users.map(user=>{
+			return (user.dataValues)
+		})
+		res.json(usersReceived)
+	})
+	.catch(next);
+});
+
+customAdminRoutes.get('/orders',function(req, res, next){
+	Order.findAll()
+	.then(orders => {
+		const ordersRecevied = orders.map(order=>{
+			return (order.dataValues)
+		})
+		res.json(ordersRecevied)
+	})
+	.catch(next);
+});
 
 customAdminRoutes.get('/products/:productId', function(req, res, next) {
     Product.findOne({

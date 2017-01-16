@@ -20,6 +20,8 @@ module.exports = customUserRoutes
 // })
 
 
+
+
 customUserRoutes.post('/',function(req, res, next){
 
 	const cart = req.body.cart;
@@ -117,9 +119,9 @@ customUserRoutes.get('/cart', function(req,res,next) {
 			console.log('qty: ', cartQuantityArray[productArrIndex]);
 			return (
 				{
-					id:i, 
-					product:p.dataValues, 
-					quantity:cartQuantityArray[productArrIndex], 
+					id:i,
+					product:p.dataValues,
+					quantity:cartQuantityArray[productArrIndex],
 					cost:p.current_price * cartQuantityArray[productArrIndex]
 				}
 			)

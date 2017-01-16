@@ -8,6 +8,7 @@ import store from './store'
 import Jokes from './components/Jokes'
 import Login from './components/Login'
 import WhoAmI from './components/WhoAmI'
+import Header from './components/Header'
 
 import Products from './components/Products';
 import Product from './components/Product';
@@ -15,6 +16,8 @@ import Product from './components/Product';
 import Signup from './components/signUp'
 import Cart from './components/Cart';
 import ProductEdit from './components/ProductEdit';
+import Orders from './components/Orders';
+import Users from './components/Users';
 
 
 const ExampleApp = connect(
@@ -24,6 +27,7 @@ const ExampleApp = connect(
     <div>
       <nav>
         {user ? <WhoAmI/> : <Login/>}
+        <Header/>
       </nav>
       {
         // React.Children.map(children,(child)=>React.cloneElement(child,{user}))
@@ -47,6 +51,8 @@ render (
         <Route path="/products/:productId/edit" component={ProductEdit} />
         <Route path="/signup" component={Signup}/>
         <Route path="/cart" component={Cart} />
+        <Route path="/orders" component={Orders} />
+        <Route path="/users" component={Users} />
       </Route>
     </Router>
   </Provider>,
