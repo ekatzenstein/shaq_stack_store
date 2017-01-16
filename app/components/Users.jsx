@@ -3,6 +3,18 @@ import {Link, browserHistory} from 'react-router';
 import axios from 'axios';
 
 const testArr = [{title: 'test'}];
+
+
+//we should probably  drop this in a util file
+//http://stackoverflow.com/questions/1129216/sort-array-of-objects-by-string-property-value-in-javascript
+function compare(a,b) {
+  if (a.name < b.name)
+    return -1;
+  if (a.name > b.name)
+    return 1;
+  return 0;
+}
+
 export default class Users extends Component {
 
   constructor() {
@@ -12,12 +24,14 @@ export default class Users extends Component {
       search:''
     };
     this._searchUser=this._searchUser.bind(this)
+    this._deleteUser=this._deleteUser.bind(this)
+    this._promoteUser=this._promoteUser.bind(this)
   }
   componentDidMount() {
    axios.get(`/api/admin/users`)
    .then(res => res.data)
    .then( users => {
-    this.setState({users});
+    this.setState({users:users.sort(compare)});
    });
 
   }
@@ -25,22 +39,28 @@ export default class Users extends Component {
   _searchUser(e){
     this.setState({search:e.target.value.toLowerCase()})
   }
+  _deleteUser(e,i){
+    e.preventDefault();
 
-  handleClick(evt) {
-
-    // evt.preventDefault();
-      // console.log('buy user: ', evt.target.id);
-    // const user_id = evt.target.id;
-    // axios.post('/api/users/cart/', {
-    //   user_id: user_id*1,
-    //   quantity: 1
-    // })
-    // .then(res => {
-    //   console.log(res.data);
-    // })
-    // .catch(err=> console.log(err));
+        axios.delete(`/api/admin/users/${user.id}`)
+          .then(res => {
+            const users = [...this.state.users]
+            users.splice(i,1);
+            this.setState({users})
+          })
   }
+  _promoteUser(e,i){
+    e.preventDefault();
+    const user = this.state.users[i];
+    axios.put(`/api/admin/users/${user.id}`)
+      .then(res => {
+        const users = [...this.state.users];
+        const promoted_user = Object.assign({},user,{isAdmin:true});
+        users[i]=promoted_user;
+        this.setState({users})
+      })
 
+  }
 
   render() {
 
@@ -53,7 +73,7 @@ export default class Users extends Component {
         const condition1 = `${stringArrayOfValues.join('-')}`.toLowerCase().indexOf(this.state.search)!==-1;
         return condition1;
       })
-      .map(user =>
+      .map((user,i) =>
       {
         return (
           <tr key={user.id}>
@@ -64,6 +84,14 @@ export default class Users extends Component {
           <td> {user.isAdmin.toString()} </td>
           <td> {user.created_at} </td>
           <td> {user.updated_at} </td>
+          <td><button onClick={(event)=>this._deleteUser(event,i)}>
+          delete user</button>
+          </td>
+          <td>
+          {!user.isAdmin?<button onClick={(event)=>this._promoteUser(event,i)}>
+          promote user</button>:null
+      }
+            </td>
           </tr>
         )
       });
