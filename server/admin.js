@@ -26,38 +26,58 @@ customAdminRoutes.use((req, res, next) => {
         res.sendStatus(403);
     }
 })
-customAdminRoutes.get('/users',function(req, res, next){
-	User.findAll()
-	.then(users => {
-		const usersReceived = users.map(user=>{
-			return (user.dataValues)
-		})
-		res.json(usersReceived)
-	})
-	.catch(next);
+customAdminRoutes.get('/users', function(req, res, next) {
+    User.findAll()
+        .then(users => {
+            const usersReceived = users.map(user => {
+                return (user.dataValues)
+            })
+            res.json(usersReceived)
+        })
+        .catch(next);
 });
 
 customAdminRoutes.delete('/users/:userId', function(req, res, next) {
     User.destroy({
-        where: {
-            id: req.params.userId
-        }
-    }).then(result => {
-        res.sendStatus(200)
-    }).catch(err=>{
-        res.send(err)
-    })
+            where: {
+                id: req.params.userId
+            }
+        }).then(result => {
+            res.sendStatus(200)
+        })
+        .catch(err => {
+            res.send(err)
+        })
 });
 
-customAdminRoutes.get('/orders',function(req, res, next){
-	Order.findAll()
-	.then(orders => {
-		const ordersRecevied = orders.map(order=>{
-			return (order.dataValues)
-		})
-		res.json(ordersRecevied)
-	})
-	.catch(next);
+customAdminRoutes.put('/users/:userId', function(req, res, next) {
+    User.findOne({
+            where: {
+                id: req.params.userId
+            }
+        }).then(user => {
+            return user.update(Object.assign({}, user.dataValues, {
+                isAdmin: true
+            }))
+        })
+        .then(result => {
+            res.sendStatus(200)
+        })
+        .catch(err => {
+            res.send(err)
+        })
+});
+
+
+customAdminRoutes.get('/orders', function(req, res, next) {
+    Order.findAll()
+        .then(orders => {
+            const ordersRecevied = orders.map(order => {
+                return (order.dataValues)
+            })
+            res.json(ordersRecevied)
+        })
+        .catch(next);
 });
 
 customAdminRoutes.get('/products/:productId', function(req, res, next) {
@@ -79,7 +99,7 @@ customAdminRoutes.put('/products/:productId', function(req, res, next) {
         return product.update(req.body)
     }).then(result => {
         res.sendStatus(200)
-    }).catch(err=>{
+    }).catch(err => {
         res.send(err)
     })
 });
