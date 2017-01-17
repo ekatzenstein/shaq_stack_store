@@ -41,13 +41,13 @@ export default class Users extends Component {
   }
   _deleteUser(e,i){
     e.preventDefault();
-
-        axios.delete(`/api/admin/users/${user.id}`)
-          .then(res => {
-            const users = [...this.state.users]
-            users.splice(i,1);
-            this.setState({users})
-          })
+    const user=this.state.users[i]
+    axios.delete(`/api/admin/users/${user.id}`)
+      .then(res => {
+        const users = [...this.state.users]
+        users.splice(i,1);
+        this.setState({users})
+      })
   }
   _promoteUser(e,i){
     e.preventDefault();
