@@ -32,7 +32,7 @@ customAdminRoutes.get('/users', function(req, res, next) {
             const usersReceived = users.map(user => {
                 return (user.dataValues)
             })
-            res.json(usersReceived)
+            res.json({users:usersReceived, currentUser:req.user})
         })
         .catch(next);
 });

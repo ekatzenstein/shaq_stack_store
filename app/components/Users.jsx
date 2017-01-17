@@ -21,6 +21,7 @@ export default class Users extends Component {
     super();
     this.state = {
       users: [],
+      currentUser:{},
       search:''
     };
     this._searchUser=this._searchUser.bind(this)
@@ -30,8 +31,8 @@ export default class Users extends Component {
   componentDidMount() {
    axios.get(`/api/admin/users`)
    .then(res => res.data)
-   .then( users => {
-    this.setState({users:users.sort(compare)});
+   .then( res => {
+    this.setState({users:res.users.sort(compare), currentUser:res.currentUser});
    });
 
   }
@@ -84,8 +85,12 @@ export default class Users extends Component {
           <td> {user.isAdmin.toString()} </td>
           <td> {user.created_at} </td>
           <td> {user.updated_at} </td>
-          <td><button onClick={(event)=>this._deleteUser(event,i)}>
+          <td>
+          {user.id!==this.state.currentUser.id ?
+          <button onClick={(event)=>this._deleteUser(event,i)}>
           delete user</button>
+
+          :null}
           </td>
           <td>
           {!user.isAdmin?<button onClick={(event)=>this._promoteUser(event,i)}>
