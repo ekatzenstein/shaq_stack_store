@@ -191,7 +191,7 @@ export default class Cart extends Component {
 
         <td> <Link to={`/products/${product.id}`}>{product.title}</Link> </td>
         <td> {product.category.join(', ')} </td>
-        <td> {product.photo_url} </td>
+        <td> <img src={product.photo_url} width={"100px"} /></td>
         <td> {product.current_price} </td>
         <td> {product.description} </td>
         <td> <input name="Quantity" id={item.id} value={item.quantity}  onChange={this._editQuantity} /></td>

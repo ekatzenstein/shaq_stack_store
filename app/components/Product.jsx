@@ -106,7 +106,7 @@ export default class Product extends Component {
       <tr key={product.id}>
       <td> {product.title} </td>
       <td> {product.category.join(', ')} </td>
-      <td> <img src={product.photo_url} /> </td>
+      <td> <img src={product.photo_url} width={"400px"}/> </td>
       <td> {product.current_price} </td>
       <td> {product.description} </td>
       <td> {product.availability} </td>
@@ -131,7 +131,7 @@ export default class Product extends Component {
         <tr>
         <th> title </th>
         <th> category </th>
-        <th> photo_url </th>
+        <th> photo </th>
         <th> current_price </th>
         <th> description </th>
         <th> availability </th>
