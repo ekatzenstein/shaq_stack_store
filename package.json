@@ -11,7 +11,8 @@
     "start": "check-node-version --node '>= 6.7.0' && bin/setup && DATABASE_URL=postgres://localhost/graceshopper nodemon server/start.js",
     "start-e": "check-node-version --node '>= 6.7.0' && bin/setup && DATABASE_URL=postgres://erick:mypassword123@localhost:5432/graceshopper nodemon server/start.js",
     "seed": "DATABASE_URL=postgres://localhost/graceshopper node db/seed.js",
-    "seed-e": "DATABASE_URL=postgres://erick:mypassword123@localhost:5432/graceshopper node db/seed.js"
+    "seed-e": "DATABASE_URL=postgres://erick:mypassword123@localhost:5432/graceshopper node db/seed.js",
+    "postinstall": "bin/setup && webpack -p --config ./webpack.config.js --progress"
   },
   "repository": {
     "type": "git",
@@ -62,19 +63,20 @@
     "sequelize": "^3.24.6",
     "sinon": "^1.17.6",
     "sinon-chai": "^2.8.0",
-    "xoauth2": "^1.2.0"
-  },
-  "devDependencies": {
+    "xoauth2": "^1.2.0",
     "babel": "^6.5.2",
     "babel-core": "^6.18.0",
     "babel-loader": "^6.2.7",
     "babel-preset-es2015": "^6.18.0",
     "babel-preset-react": "^6.16.0",
+    "webpack": "^1.13.3"
+  },
+  "devDependencies": {
+    
     "chai": "^3.5.0",
     "mocha": "^3.1.2",
     "supertest": "^2.0.1",
     "supertest-as-promised": "^4.0.1",
-    "volleyball": "^1.4.1",
-    "webpack": "^1.13.3"
+    "volleyball": "^1.4.1"
   }
 }
