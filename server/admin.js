@@ -80,6 +80,22 @@ customAdminRoutes.get('/orders', function(req, res, next) {
         .catch(next);
 });
 
+customAdminRoutes.put('/orders/:orderId', function(req, res, next) {
+    Order.findOne({
+        where: {
+            id: req.params.orderId
+        }
+    }).then(order => {
+        return order.update(req.body)
+    }).then(result => {
+        res.json(result)
+    }).catch(err => {
+        res.send(err)
+    })
+});
+
+
+
 customAdminRoutes.get('/products/:productId', function(req, res, next) {
     Product.findOne({
         where: {
