@@ -106,7 +106,7 @@ export default class Product extends Component {
       <tr key={product.id}>
       <td> {product.title} </td>
       <td> {product.category.join(', ')} </td>
-      <td> {product.photo_url} </td>
+      <td> <img src={product.photo_url} /> </td>
       <td> {product.current_price} </td>
       <td> {product.description} </td>
       <td> {product.availability} </td>
@@ -122,7 +122,7 @@ export default class Product extends Component {
     const checkOutBtn = (<button onClick={this.checkOut}>Check Out</button>);
     const keepShoppingBtn = (<button onClick={this.keepShopping}>Keep Shopping</button>);
 
-
+    console.log('product_url: ', product.photo_url);
     return (
       <div >
         <h1>PRODUCT</h1>
