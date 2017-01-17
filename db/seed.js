@@ -11,13 +11,13 @@ const seedUsers = () => db.Promise.map([
 ], user => db.model('users').create(user));
 
 const seedProducts = () => db.Promise.map([
-  {title: 'Hats', category: ['Clothes','Accessories'], current_price: 16, description: 'Fedora with a feather', availability: true, inventory: 100},
-  {title: 'Ski Suits', category: ['Athletics', 'Clothes'], current_price: 11, description: 'Full body ski suit', availability: false, inventory: 5},
-  {title: 'Fanny Pack', category: ['Accessories'], current_price: 12, description: 'Bright neon in all colors', availability: true, inventory: 64},
-  {title: 'Chuck Taylors', category: ['Clothes','Shoes'], current_price: 15, description: 'A variation on a classsic', availability: false, inventory: 35},
-  {title: 'Hairspray', category: ['Beauty'], current_price: 41, description: 'Fulll of CFCs', availability: true, inventory: 22},
-  {title: 'Socks', category: ['Clothes'], current_price: 51, description: 'Big wooly socks', availability: true, inventory: 21},
-  {title: 'Wigs', category: ['Accessories', 'Beauty'], current_price: 21, description: 'Business in the front, party in the back', availability: false, inventory: 100}
+  {title: 'Hats', photo_url: '/images/hats.jpg', category: ['Clothes','Accessories'], current_price: 16, description: 'Fedora with a feather', availability: true, inventory: 100},
+  {title: 'Ski Suits', photo_url: '/images/ski_suits.jpg', category: ['Athletics', 'Clothes'], current_price: 11, description: 'Full body ski suit', availability: false, inventory: 5},
+  {title: 'Fanny Pack', photo_url: '/images/fanny_pack.jpg', category: ['Accessories'], current_price: 12, description: 'Bright neon in all colors', availability: true, inventory: 64},
+  {title: 'Chuck Taylors', photo_url: '/images/chuck_taylors.jpg', category: ['Clothes','Shoes'], current_price: 15, description: 'A variation on a classsic', availability: false, inventory: 35},
+  {title: 'Hairspray', photo_url: '/images/hairspray.jpg', category: ['Beauty'], current_price: 41, description: 'Fulll of CFCs', availability: true, inventory: 22},
+  {title: 'Socks', photo_url: '/images/socks.jpg', category: ['Clothes'], current_price: 51, description: 'Big wooly socks', availability: true, inventory: 21},
+  {title: 'Wigs', photo_url: '/images/wigs.jpg', category: ['Accessories', 'Beauty'], current_price: 21, description: 'Business in the front, party in the back', availability: false, inventory: 100}
 ], product => db.model('products').create(product));
 
 const seedReviews = () => db.Promise.map([
