@@ -12,6 +12,7 @@ api
   .use('/orders', require('./orders'))
   .use('/admin', require('./admin'))
   .use('/email', require('./email'))
+  .use('/promos', require('./promos'))
 
 
 // Send along any errors

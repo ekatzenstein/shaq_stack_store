@@ -26,21 +26,62 @@ export default class Cart extends Component {
       name: '',
       email: '',
       address: '',
-      cart: []
+      cart: [],
+      promo: '',
+      appliedPromo: '',
+      discount: 0
     };
 
     // remember to bind actions
     this._purchaseSubmit = this._purchaseSubmit.bind(this);
+    this._applyPromo = this._applyPromo.bind(this);
     this._onNameChange = this._onNameChange.bind(this);
     this._onEmailChange = this._onEmailChange.bind(this);
     this._onAddressChange = this._onAddressChange.bind(this);
+    this._onPromoChange = this._onPromoChange.bind(this);
     this._editQuantity = this._editQuantity.bind(this);
     this._handleDelete = this._handleDelete.bind(this);
   }
 
   componentDidMount(){
     //get cart data from database which is tied to session
-    axios.get('/api/orders/cart').then((res)=>{this.setState({cart:res.data})})
+    axios.get('/api/orders/cart')
+    .then((res)=>{
+      this.setState({cart:res.data});
+      return axios.get('/api/orders/cart/promos');
+    })
+    .then((res) => {
+      console.log('received promo code: ', res.data);
+      this.setState({appliedPromo: res.data});
+      if (!res.data)
+        throw new Error('help');
+      return axios.get('/api/promos/'+this.state.appliedPromo);
+    })
+    .then(res => res.data)
+    .then(promo=> { 
+      console.log('promo ', promo);
+      console.log('cart: ', this.state.cart)
+      const discountedProducts = promo.products;
+      const newCart = this.state.cart;
+
+      for (let i = 0; i < discountedProducts.length; i++)
+      {
+        let productId = discountedProducts[i].id;
+        let index = this.state.cart.map(item => item.product.id).indexOf(productId);
+        if (index !== -1) //found it
+        {
+          //newCart[index].cost -= promo.discount * newCart[index].cost
+          newCart[index].discount = promo.discount;
+        }
+        // console.log('looking for product: ', productId, ' found@: ', index);
+        // console.log('new cart: ', newCart);
+      }
+      //discountedProducts.map(discountedProduct => this.state.cart)
+      this.setState({appliedPromo: promo.code, cart: newCart});
+      return axios.post('/api/orders/cart/update', this.state.cart)
+
+    })
+    .catch(err=>console.error(err));
   }
   
   // componentDidMount() {
@@ -79,6 +120,39 @@ export default class Cart extends Component {
     });
   }
 
+  _applyPromo(evt){
+    evt.preventDefault();
+    console.log('state: ',this.state);
+    axios.get('/api/promos/'+this.state.promo)
+    .then(res => res.data)
+    .then(promo=> { 
+      console.log('promo ', promo);
+      console.log('cart: ', this.state.cart)
+      const discountedProducts = promo.products;
+      const newCart = this.state.cart;
+
+      for (let i = 0; i < discountedProducts.length; i++)
+      {
+        let productId = discountedProducts[i].id;
+        let index = this.state.cart.map(item => item.product.id).indexOf(productId);
+        if (index !== -1) //found it
+        {
+          //newCart[index].cost -= promo.discount * newCart[index].cost
+          newCart[index].discount = promo.discount;
+        }
+        // console.log('looking for product: ', productId, ' found@: ', index);
+        // console.log('new cart: ', newCart);
+      }
+      //discountedProducts.map(discountedProduct => this.state.cart)
+      this.setState({appliedPromo: promo.code, cart: newCart});
+      return axios.post('/api/orders/cart/update', this.state.cart)
+
+    })
+    .then(()=> axios.post('/api/orders/cart/promos/'+this.state.appliedPromo))
+    .then(res => console.log(res.data))
+    .catch(err=>console.log(err));;
+  }
+
   _onNameChange(evt) {
     this.setState({ name: evt.target.value, hasChange: true});
   }
@@ -87,6 +161,10 @@ export default class Cart extends Component {
   }
   _onAddressChange(evt) {
     this.setState({ address: evt.target.value, hasChange: true});
+  }
+
+  _onPromoChange(evt) {
+    this.setState({ promo: evt.target.value, hasChange: true});
   }
 
   _cartClear(evt) {
@@ -144,12 +222,50 @@ export default class Cart extends Component {
   render() {
 
     const input = this.state;
+
     const total = this.state.cart.reduce((prev, curr) => {
       console.log('prev is: ',prev, 'curr: ', curr);
       return (prev + curr.quantity * curr.product.current_price);
     },0);
 
+    const discount = -this.state.cart.reduce((prev, curr) => {
+      console.log('prev is: ',prev, 'curr: ', curr);
+      var acc = curr.quantity * curr.product.current_price;
+      if (curr.discount)
+        acc *= curr.discount
+      else
+        acc = 0;
+      return (prev + acc);
+    },0).toFixed(2);
+
+    //const discount = -((input.discount)*total).toFixed(2);
+
+    const newTotal = (total + discount).toFixed(2);
+
+
+    const promotions = (
+      <div className="well">
+        <form className="form-horizontal" onSubmit={this._applyPromo}>
+          <fieldset>
+            <legend>Promotions</legend>
+            <div className="form-group">
+              <label className="col-xs-2 control-label">Promo Code</label>
+              <div className="col-xs-10">
+                <input className="form-control" type="text" onChange={this._onPromoChange} value={input.promo}/>
+              </div>
+            </div>
+            <div className="form-group">
+              <div className="col-xs-10 col-xs-offset-2">
+                <button type="submit" className="btn btn-success">Apply Code</button>
+              </div>
+            </div>
+          </fieldset>
+        </form>
+
+      </div>
+      );
     const orderInfo = (
+      
       <div className="well">
         <form className="form-horizontal" onSubmit={this._purchaseSubmit}>
           <fieldset>
@@ -185,6 +301,10 @@ export default class Cart extends Component {
     const cart = this.state.cart && this.state.cart.map(item => {
       var product = item.product;
       var cost = item.quantity * product.current_price;
+      if (item.discount)
+        cost *= (1-item.discount);
+
+      cost = cost.toFixed(2);
       console.log('cost is: ', cost);
       return (
         <tr key={item.id}>
@@ -207,8 +327,11 @@ export default class Cart extends Component {
 
 
         <h1>CART</h1>
+        {
+          promotions
+        }
         <table>
-          <tbody>
+        <tbody>
         <tr>
         <th> title </th>
         <th> category </th>
@@ -228,8 +351,16 @@ export default class Cart extends Component {
         </tbody>
         </table>
         <br />
+        
         Total: {total}
         <br />
+
+        Promo Code Applied: {this.state.appliedPromo}
+        <br />
+
+        Discount: {discount}
+        <br />
+        New Total: {newTotal}
         <br />
         <button type="submit" className="btn btn-success" onClick={this._cartClear}>Clear Cart</button>
         <button type="submit" className="btn btn-success" onClick={this._keepShopping}>Keep Shopping</button>

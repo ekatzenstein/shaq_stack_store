@@ -81,7 +81,8 @@ customUserRoutes.post('/cart/update', function(req,res,next) {
 	req.session.cart = req.body.map(item=> {
 		return ({
 			product_id: item.product.id*1,
-			quantity: item.quantity*1
+			quantity: item.quantity*1,
+			discount: item.discount*1
 		})
 	});
 
@@ -92,16 +93,30 @@ customUserRoutes.post('/cart/update', function(req,res,next) {
 
 customUserRoutes.post('/cart/empty', function(req,res,next) {
 	req.session.cart = [];
+	req.session.promo = undefined;
 	res.status(200).send();
+});
+
+customUserRoutes.post('/cart/promos/:code', function(req,res,next) {
+	console.log('updating promo code on session', req.params.code);
+	req.session.promo = req.params.code;
+	res.status(200).send();
+});
+
+customUserRoutes.get('/cart/promos', function(req,res,next) {
+	console.log('sending back promo: ', req.session.promo);
+	res.status(200).send(req.session.promo);
 });
 
 customUserRoutes.get('/cart', function(req,res,next) {
 
 	var cartIdArray = req.session.cart.map(item=>item.product_id*1);
 	var cartQuantityArray = req.session.cart.map(item=>item.quantity*1);
+	var cartDiscountArray = req.session.cart.map(item=>item.discount*1);
 
 	console.log('cartIdArray: ',cartIdArray);
 	console.log('cartQuantityArray: ', cartQuantityArray);
+	console.log('cartDiscountArray: ', cartDiscountArray);
 
 	Product.findAll({
 		where: {
@@ -122,7 +137,8 @@ customUserRoutes.get('/cart', function(req,res,next) {
 					id:i,
 					product:p.dataValues,
 					quantity:cartQuantityArray[productArrIndex],
-					cost:p.current_price * cartQuantityArray[productArrIndex]
+					cost:p.current_price * cartQuantityArray[productArrIndex],
+					discount: cartDiscountArray[productArrIndex]
 				}
 			)
 		});
