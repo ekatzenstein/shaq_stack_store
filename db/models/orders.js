@@ -1,5 +1,7 @@
 'use strict'
 
+// This file should be called order.js
+
 const Sequelize = require('sequelize');
 const db = require('APP/db');
 
@@ -25,7 +27,7 @@ const Order = db.define('orders', {
   	allowNull: true
   },
   status: {
-  	type: Sequelize.ENUM('Created', 'Processing', 'Cancelled', 'Completed'),
+    type: Sequelize.ENUM('Created', 'Processing', 'Cancelled', 'Completed'), // Nice!
   	allowNull: false,
     defaultVale: 'Created'
   }

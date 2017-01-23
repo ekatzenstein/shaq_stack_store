@@ -1,5 +1,7 @@
 'use strict'
 
+// Call this file promo.js
+
 const Sequelize = require('sequelize');
 const db = require('APP/db');
 

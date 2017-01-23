@@ -3,59 +3,47 @@ import axios from 'axios';
 import StarRatingComponent from 'react-star-rating-component';
 import {Link, browserHistory} from 'react-router';
 
-const testArr = [{title: 'test'}];
 export default class Product extends Component {
 
   constructor(props) {
     super(props);
+
     this.state = {
       product: {},
       userReviews:[],
       rating:3,
       quantity: 1,
       submitted: false
-
     };
+
     this.addReview=this.addReview.bind(this);
     this.updateRating=this.updateRating.bind(this);
     this.handleClick=this.handleClick.bind(this);
     this.quantityChange=this.quantityChange.bind(this);
     this.checkOut=this.checkOut.bind(this);
     this.keepShopping=this.keepShopping.bind(this);
-
   }
 
   componentDidMount() {
-   //this.nextJoke()
-  //  axios.get(`/api/reviews/${this.props.params.productId}`)
-  //  .then(res => {
-  //    console.log('')
-  //    console.log(res.data)
-  //    console.log('')
-  //    return res.data})
-  //  .then( review => {
-  //   this.setState({reviews:[review]})
-  // }).catch((error)=>{console.log(error)});
-
-  //  console.log('getting product details');
-   axios.get(`/api/products/${this.props.params.productId}`)
-   .then(res => res.data)
-   .then( product => {
-    console.log('product obj: ', product);
-    this.setState({product: product});
-   });
-
+    // This should be in a Redux action
+    axios.get(`/api/products/${this.props.params.productId}`)
+      .then(res => res.data)
+      .then( product => {
+        console.log('product obj: ', product);
+        this.setState({product: product});
+      });
   }
+
   updateRating(nextValue, prevValue, name) {
-      this.setState({rating: nextValue});
-    }
+    this.setState({rating: nextValue});
+  }
 
   quantityChange(e){
     console.log('changing quantity');
     this.setState({quantity: e.target.value});
   }
 
-  checkOut(evt){
+  checkOut(evt){ // this is called 'evt' in some places, 'e' in others
     evt.preventDefault();
     browserHistory.push('/cart');
   }
@@ -66,7 +54,6 @@ export default class Product extends Component {
   }
 
   handleClick(evt) {
-
     evt.preventDefault();
     console.log('clicked cart, product: ', this.state.product);
     axios.post('/api/orders/cart/', {
@@ -81,15 +68,17 @@ export default class Product extends Component {
   }
 
   addReview(evt) {
-    let review_text = document.getElementById('review').value;
+    let review_text = document.getElementById('review').value; // NO! you should never pull data directly from DOM in React
+    // Add an event handler on the textarea, and store the data in local state
+
     review_text = review_text==='' ? 'no input text' : review_text;
     const rating = this.state.rating;
     const review ={rating, review_text, product_id:this.props.params.productId};
+
     axios.post(`/api/reviews`,review)
     .then(res=>res.data)
     .then(userReview=>{
       this.setState({userReviews:[...this.state.userReviews,userReview]})
-
     })
     .catch(err=>{console.log(err)})
   }
@@ -97,26 +86,26 @@ export default class Product extends Component {
 
 
   render() {
-
     const product = this.state.product;
 
+    const reviews = this.state.userReviews.length
+      ? [...this.state.product.reviews, ...this.state.userReviews]
+      : this.state.product.reviews;
 
-    const reviews = this.state.product.reviews && this.state.userReviews.length>0 ? [...this.state.product.reviews,...this.state.userReviews] : this.state.product.reviews;
-    const productComponent = Object.keys(product).length>0 ?  (
+    const productComponent = product.id && (
       <tr key={product.id}>
-      <td> {product.title} </td>
-      <td> {product.category.join(', ')} </td>
-      <td> <img src={product.photo_url} width={"400px"}/> </td>
-      <td> {product.current_price} </td>
-      <td> {product.description} </td>
-      <td> {product.availability} </td>
-      <td> {product.inventory} </td>
-      <td>{this.props.isAdmin ? <Link to={`/products/${product.id}/edit`}><button>Edit Product</button></Link>:null}</td>
+        <td> {product.title} </td>
+        <td> {product.category.join(', ')} </td>
+        <td> <img src={product.photo_url} width={"400px"}/> </td>
+        <td> {product.current_price} </td>
+        <td> {product.description} </td>
+        <td> {product.availability} </td>
+        <td> {product.inventory} </td>
+        <td>{this.props.isAdmin ? <Link to={`/products/${product.id}/edit`}><button>Edit Product</button></Link>:null}</td>
       </tr>
-      ) :
-      null;
+    );
 
-
+    // If there's no logic around these, just render them inline
     const quantityInput = (<input type="number" name="quantity" value={this.state.quantity} onChange={this.quantityChange} />);
     const buyButton = (<button onClick={this.handleClick}>Add to Cart</button>);
     const checkOutBtn = (<button onClick={this.checkOut}>Check Out</button>);
@@ -127,45 +116,33 @@ export default class Product extends Component {
       <div >
         <h1>PRODUCT</h1>
         <table>
-        <tbody>
-        <tr>
-        <th> title </th>
-        <th> category </th>
-        <th> photo </th>
-        <th> current_price </th>
-        <th> description </th>
-        <th> availability </th>
-        <th> inventory </th>
-        </tr>
-        {
-          productComponent
-        }
-
-        </tbody>
-
+          <tbody>
+            <tr>
+              <th> title </th>
+              <th> category </th>
+              <th> photo </th>
+              <th> current_price </th>
+              <th> description </th>
+              <th> availability </th>
+              <th> inventory </th>
+            </tr>
+            { productComponent }
+          </tbody>
         </table>
+        { quantityInput }
+        { buyButton }
+        <br />
 
-        {
-          quantityInput
-        }
-        {
-          buyButton
-        }
+        { this.state.submitted && checkOutBtn }
         <br />
-        {
-          this.state.submitted && checkOutBtn
-        }
-        <br />
-        {
-          this.state.submitted && keepShoppingBtn
-        }
+
+        { this.state.submitted && keepShoppingBtn }
 
         {this.state.product.reviews && reviews.map((review,i)=>(
           <div key={i}><h3>{review.rating}/5</h3><span>{review.updated_at}</span><br/>
-          <p>{review.review_text}</p>
+            <p>{review.review_text}</p>
           </div>
         ))}
-
 
         <StarRatingComponent
           name="product rating"
@@ -178,17 +155,13 @@ export default class Product extends Component {
         <textarea id='review'></textarea>
         <br/>
         <button onClick={this.addReview}>
-
-          Add Review</button>
+          Add Review
+        </button>
         <br/>
-
-
-
       </div>
     )
   }
 }
-
 
 // const product = this.props.product && (() => {
 //   return (

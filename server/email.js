@@ -1,20 +1,17 @@
 var nodemailer = require('nodemailer');
 var xoauth2 = require('xoauth2');
 
+// PUT THESE IN ENV VARIABLES!!!
 var api_key = 'key-a54f8ba006d09cf90417c923916cbe11';
 var domain = 'sandboxbdd4161d7ba64b77b1945ef7d3a43086.mailgun.org';
 var mailgun = require('mailgun-js')({apiKey: api_key, domain: domain});
- 
-
-
-
 
 var router = require('express').Router();
 
 router.post('/', handleSayHello); // handle the route at yourdomain.com/sayHello
 
 function handleSayHello(req, res, next) {
-
+    // More things that can live in an ENV or config file
     var data = {
       from: 'shaqstackstore <shaqstackstore@sandboxbdd4161d7ba64b77b1945ef7d3a43086.mailgun.org>',
       to: req.body.email || 'rcsheng@gmail.com',
