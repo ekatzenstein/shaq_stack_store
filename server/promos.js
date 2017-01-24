@@ -16,3 +16,9 @@ const promos = epilogue.resource({
   endpoints: ['/promos', '/promos/:code']
 })
 
+const {mustBeLoggedIn, selfOnly, forbidden, isAdmin} = epilogue.filters
+
+// promos.list.auth(mustBeLoggedIn);
+promos.list.auth(isAdmin);
+promos.create.auth(mustBeLoggedIn);
+promos.create.auth(isAdmin);
