@@ -10,6 +10,8 @@ export const Header = ({ user, logout }) => (
     {(user && user.isAdmin) ? <Link to='/orders'>Orders</Link> : null}
     <br/>
     {(user && user.isAdmin) ? <Link to='/users'>Users</Link> : null}
+    <br/>
+    {(user && user.isAdmin) ? <Link to='/promosetup'>Promo Setup</Link> : null}
   </div>
 )
 

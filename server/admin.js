@@ -121,11 +121,11 @@ customAdminRoutes.put('/products/:productId', function(req, res, next) {
     })
 });
 
-customAdminRoutes.get('/promos', function(req, res, next) {
-    Promos.findAll()
-    .then(result => {
-        res.send(result);
-    }).catch(err => {
-        res.send(err)
-    })
-});
+// customAdminRoutes.get('/promos', function(req, res, next) {
+//     Promos.findAll()
+//     .then(result => {
+//         res.send(result);
+//     }).catch(err => {
+//         res.send(err)
+//     })
+// });

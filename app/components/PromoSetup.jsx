@@ -12,18 +12,19 @@ export default class PromoSetup extends Component {
       promocode: '',
       discount: 0
     };
-    // this._searchOrder=this._searchOrder.bind(this)
-    // this._saveUpdates=this._saveUpdates.bind(this)
-    // this._categoryChange=this._categoryChange.bind(this)
+    this._changeCode=this._changeCode.bind(this)
+    this._changeDiscount=this._changeDiscount.bind(this)
+    this._saveCode=this._saveCode.bind(this)
   }
   
   componentDidMount() {
-   axios.get(`/api/admin/promos`)
+   axios.get(`/api/promos`)
    .then(res => res.data)
    .then( codes => {
-     console.log(codes)
+     console.log('existing codes: ', codes)
     this.setState({existingcodes: codes});
-   });
+   })
+   .catch(err=>console.log(err));
 
   }
 
@@ -38,9 +39,15 @@ export default class PromoSetup extends Component {
   _saveCode(e){
     e.preventDefault();
     
-    axios.put(`/api/admin/promos/`,this.state)
-      .then(res => {
-      }).catch(err=>console.log(err));
+    axios.post(`/api/promos/`,{
+      code: this.state.promocode,
+      discount: this.state.discount
+    })
+    .then(res => { 
+      console.log('res is: ', res);
+      this.setState({existingcodes: [...this.state.existingcodes, res.data]});
+    })
+    .catch(err=>console.log(err));
 
   }
 
@@ -53,7 +60,7 @@ export default class PromoSetup extends Component {
       .map((code,i) =>
       {
         return (
-          <tr key={code}>
+          <tr key={i}>
 
           <td> {code.code}</td>
           <td> {code.discount} </td>
@@ -70,6 +77,8 @@ export default class PromoSetup extends Component {
 
         New Discount:
         <input name="Discount" onChange={this._changeDiscount} />
+        <br />
+        <button onClick={this._saveCode}> Save </button>
         <br />
 
         <h1>Existing Codes</h1>

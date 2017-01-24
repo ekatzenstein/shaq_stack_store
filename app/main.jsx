@@ -18,7 +18,7 @@ import Cart from './components/Cart';
 import ProductEdit from './components/ProductEdit';
 import Orders from './components/Orders';
 import Users from './components/Users';
-import Users from './components/PromoSetup';
+import PromoSetup from './components/PromoSetup';
 
 
 const ExampleApp = connect(
