@@ -6,6 +6,7 @@ const Order = require('APP/db/models/orders');
 const OrderItem = require('APP/db/models/orderItem');
 const Product = require('APP/db/models/products');
 const User = require('APP/db/models/user');
+const Promos = require('APP/db/models/promos');
 
 const customAdminRoutes = require('express').Router()
 
@@ -115,6 +116,15 @@ customAdminRoutes.put('/products/:productId', function(req, res, next) {
         return product.update(req.body)
     }).then(result => {
         res.sendStatus(200)
+    }).catch(err => {
+        res.send(err)
+    })
+});
+
+customAdminRoutes.get('/promos', function(req, res, next) {
+    Promos.findAll()
+    .then(result => {
+        res.send(result);
     }).catch(err => {
         res.send(err)
     })
