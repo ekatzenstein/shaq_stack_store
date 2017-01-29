@@ -4,6 +4,8 @@ import {Link} from 'react-router';
 import Login from './Login'
 import WhoAmI from './WhoAmI'
 
+import Tabs from './Tabs';
+
 import AppBar from 'material-ui/AppBar';
 import IconButton from 'material-ui/IconButton';
 import NavigationClose from 'material-ui/svg-icons/navigation/close';
@@ -36,7 +38,7 @@ class Header extends React.Component {
     return(
       <div>
         <AppBar
-          title={<span style={styles.title}>shaq_stack_store</span>}
+          title={<Link to='/' style={styles.title}>shaq_stack_store</Link>}
           onTitleTouchTap={handleTouchTap}
           iconElementLeft={<IconButton><NavigationClose /></IconButton>}
           iconElementRight={this.props.user ? <WhoAmI/> : <Login/>}
@@ -44,6 +46,7 @@ class Header extends React.Component {
         />
 
         <div>
+          <Tabs/>
           <Link to='/products'>Products</Link>
           <br/>
           <Link to='/cart'>Cart</Link>
@@ -75,5 +78,6 @@ function handleTouchTap() {
 const styles = {
   title: {
     cursor: 'pointer',
+    textDecoration:'none'
   },
 };
