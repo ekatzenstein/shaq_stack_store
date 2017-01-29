@@ -1,6 +1,8 @@
 'use strict'
 
-const bcrypt = require('bcrypt')
+// This file should be called review.js
+
+const bcrypt = require('bcrypt') // this isn't used
 const Sequelize = require('sequelize')
 const db = require('APP/db')
 
@@ -17,10 +19,12 @@ const Review = db.define('reviews', {
 		}
   },
 
+  // since this is in a Review table, you can just
+  // call this text
   review_text: {
   	type: Sequelize.TEXT,
   	allowNull: false,
-  	defaultValue: null,
+    defaultValue: null, // allow null false & default value null??
   	validate: {
   		notEmpty: true,
   	}
