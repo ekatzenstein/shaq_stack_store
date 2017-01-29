@@ -1,22 +1,25 @@
 import React from 'react';
 import {Link} from 'react-router';
 
-import Login from './Login'
-import WhoAmI from './WhoAmI'
+
 
 import Tabs from './Tabs';
+import HeaderOptions from './HeaderOptions';
 
 import AppBar from 'material-ui/AppBar';
-import IconButton from 'material-ui/IconButton';
-import NavigationClose from 'material-ui/svg-icons/navigation/close';
-import FlatButton from 'material-ui/FlatButton';
+
 
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
+
+//material-ui requirements
+import injectTapEventPlugin from 'react-tap-event-plugin';
+injectTapEventPlugin();
+
+
 
 
 
 class Header extends React.Component {
-
 
   static childContextTypes =
     {
@@ -31,22 +34,25 @@ class Header extends React.Component {
     }
 
   render(){
-    console.log(this)
+    console.log(window.location)
     const user = this.props.user;
     const logout = this.props.logout;
     // console.log(this.props)
     return(
       <div>
         <AppBar
-          title={<Link to='/' style={styles.title}>shaq_stack_store</Link>}
-          onTitleTouchTap={handleTouchTap}
-          iconElementLeft={<IconButton><NavigationClose /></IconButton>}
-          iconElementRight={this.props.user ? <WhoAmI/> : <Login/>}
-          style={{background:'red'}}
+          titleStyle={{height:'100%'}}
+          zDepth={2}
+          title={<span style={{lineHeight:'100px'}}><Link to='/' style={styles.title}>shaq stack store</Link></span>}
+          showMenuIconButton={false}
+          iconElementRight={(
+          <HeaderOptions user={this.props.user}/>
+        )}
+
+          style={{background:'white'}}
         />
 
         <div>
-          <Tabs/>
           <Link to='/products'>Products</Link>
           <br/>
           <Link to='/cart'>Cart</Link>
@@ -78,6 +84,10 @@ function handleTouchTap() {
 const styles = {
   title: {
     cursor: 'pointer',
-    textDecoration:'none'
+    textDecoration:'none',
+    fontFamily:'pacfont',
+    color:'black',
+    fontSize:'40px',
+    overflow:'hidden'
   },
 };
