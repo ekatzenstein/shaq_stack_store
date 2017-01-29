@@ -34,7 +34,6 @@ class Header extends React.Component {
     }
 
   render(){
-    console.log(window.location)
     const user = this.props.user;
     const logout = this.props.logout;
     // console.log(this.props)
@@ -87,7 +86,7 @@ const styles = {
     textDecoration:'none',
     fontFamily:'pacfont',
     color:'black',
-    fontSize:'40px',
+    fontSize:'4vw',
     overflow:'hidden'
   },
 };

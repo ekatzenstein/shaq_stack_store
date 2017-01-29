@@ -1,5 +1,5 @@
 import React from 'react';
-
+import {Link} from 'react-router';
 import Login from './Login'
 import WhoAmI from './WhoAmI'
 
@@ -10,6 +10,9 @@ import FlatButton from 'material-ui/FlatButton';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
+
+import ShoppingCart from 'material-ui/svg-icons/action/shopping-cart';
+
 
 const style={
   sb:{
@@ -48,8 +51,14 @@ const HeaderOptions = (props) => (
               {props.user ? <WhoAmI/> : <Login/>}
               </td>
               <td className='header' style={style.cb}>
+              <IconButton>
+              <Link to='/cart'><ShoppingCart /></Link>
+              </IconButton>
+              </td>
+              <td className='header' style={style.cb}>
               <Options/>
               </td>
+
           </tr>
       </tbody>
   </table>
