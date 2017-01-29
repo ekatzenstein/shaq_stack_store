@@ -2,7 +2,28 @@ import React, { Component } from 'react';
 import {Link, browserHistory} from 'react-router';
 import axios from 'axios';
 
-const testArr = [{title: 'test'}];
+
+import {GridList, GridTile} from 'material-ui/GridList';
+import IconButton from 'material-ui/IconButton';
+import Subheader from 'material-ui/Subheader';
+import ShoppingCart from 'material-ui/svg-icons/action/add-shopping-cart';
+
+import getMuiTheme from 'material-ui/styles/getMuiTheme'
+
+
+const styles = {
+  root: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    justifyContent: 'space-around',
+  },
+  gridList: {
+    width: 500,
+    height: 450,
+    overflowY: 'auto',
+  },
+};
+
 export default class Products extends Component {
 
   constructor() {
@@ -26,6 +47,17 @@ export default class Products extends Component {
    });
 
   }
+  static childContextTypes =
+    {
+        muiTheme: React.PropTypes.object
+    }
+
+    getChildContext()
+    {
+        return {
+            muiTheme: getMuiTheme()
+        }
+    }
 
   _categoryChange(e){
     this.setState({categories:[e.target.value]})
@@ -39,16 +71,17 @@ export default class Products extends Component {
     browserHistory.push('/cart');
   }
 
-  handleClick(evt) {
-
-    evt.preventDefault();
-    console.log('buy product: ', evt.target.id);
-    const product_id = evt.target.id;
+  handleClick(product) {
+    console.log(product)
+    console.log('buy product: ', product.id);
+    const product_id =  product.id;
     axios.post('/api/orders/cart/', {
       product_id: product_id*1,
       quantity: 1
     })
     .then(res => {
+      // product.carted=!product.carted;
+      // this.setState({products:this.state.products})
       console.log(res.data);
     })
     .catch(err=> console.log(err));
@@ -56,7 +89,6 @@ export default class Products extends Component {
 
 
   render() {
-    console.log(this.props)
     const checkOutBtn = (<button onClick={this.checkOut}>Check Out</button>);
 
     const products =
@@ -74,23 +106,23 @@ export default class Products extends Component {
 
           return condition1 && condition2;
         })
-      .map(product =>
-      {
-        return (
-          <tr key={product.id}>
-
-          <td> <Link to={`/products/${product.id}`}>{product.title}</Link> </td>
-          <td> {product.category.join(', ')} </td>
-          <td> <img src={product.photo_url} width={"100px"}/></td>
-          <td> {product.current_price} </td>
-          <td> {product.description} </td>
-          <td> {product.availability} </td>
-          <td> {product.inventory} </td>
-          <td><button id={`${product.id}`} onClick={this.handleClick}>Add to Cart</button></td>
-          <td>{this.props.isAdmin ? <Link to={`products/${product.id}/edit`}><button>Edit Product</button></Link>:null}</td>
-          </tr>
-        )
-      });
+      // .map(product =>
+      // {
+      //   return (
+      //     <tr key={product.id}>
+      //
+      //     <td> <Link to={`/products/${product.id}`}>{product.title}</Link> </td>
+      //     <td> {product.category.join(', ')} </td>
+      //     <td> <img src={product.photo_url} width={"100px"}/></td>
+      //     <td> {product.current_price} </td>
+      //     <td> {product.description} </td>
+      //     <td> {product.availability} </td>
+      //     <td> {product.inventory} </td>
+      //     <td><button id={`${product.id}`} onClick={this.handleClick}>Add to Cart</button></td>
+      //     <td>{this.props.isAdmin ? <Link to={`products/${product.id}/edit`}><button>Edit Product</button></Link>:null}</td>
+      //     </tr>
+      //   )
+      // });
 
     return (
       <div >
@@ -110,30 +142,36 @@ export default class Products extends Component {
         </select>
 
 
-        <h1>PRODUCTS</h1>
-        <table>
-          <tbody>
-        <tr>
-        <th> title </th>
-        <th> category </th>
-        <th> photo_url </th>
-        <th> current_price </th>
-        <th> description </th>
-        <th> availability </th>
-        <th> inventory </th>
-        <th> buy now </th>
 
-        </tr>
-        {
-          products
-        }
-        </tbody>
-        </table>
         <br />
         <br />
         {
           checkOutBtn
         }
+        <div className='container-fluid' style={{width:'100%'}}>
+    <GridList
+      cellHeight={180}
+      cols={3}
+    >
+      <Subheader>Products</Subheader>
+      {products.map((tile) => {
+        console.log(tile.carted)
+        return(
+
+        <GridTile
+          key={tile.img}
+          title={<Link to={`/products/${tile.id}`} style={{color:'white'}}>{tile.title}</Link>}
+          subtitle={<span><b>{tile.description}</b></span>}
+          actionIcon={<IconButton  id={`${tile.id}`}  onClick={()=>this.handleClick(tile)}><ShoppingCart color="white" /></IconButton>}
+
+
+        >
+          <img src={tile.photo_url} />
+        </GridTile>
+      )
+    })}
+    </GridList>
+  </div>
       </div>
 
     )

@@ -58,7 +58,7 @@ export default class Cart extends Component {
       return axios.get('/api/promos/'+this.state.appliedPromo);
     })
     .then(res => res.data)
-    .then(promo=> { 
+    .then(promo=> {
       console.log('promo ', promo);
       console.log('cart: ', this.state.cart)
       const discountedProducts = promo.products;
@@ -83,7 +83,7 @@ export default class Cart extends Component {
     })
     .catch(err=>console.error(err));
   }
-  
+
   // componentDidMount() {
   //  //this.nextJoke()
   //  axios.get('/api/products')
@@ -104,7 +104,7 @@ export default class Cart extends Component {
       status: 'Created',
       cart: this.state.cart
     })
-    .then(()=> { 
+    .then(()=> {
       console.log('submit email!');
       return axios.post('/api/email', {
         name: this.state.name,
@@ -125,7 +125,7 @@ export default class Cart extends Component {
     console.log('state: ',this.state);
     axios.get('/api/promos/'+this.state.promo)
     .then(res => res.data)
-    .then(promo=> { 
+    .then(promo=> {
       console.log('promo ', promo);
       console.log('cart: ', this.state.cart)
       const discountedProducts = promo.products;
@@ -181,9 +181,9 @@ export default class Cart extends Component {
   _keepShopping(evt) {
     evt.preventDefault();
 
-    
+
     browserHistory.push('/');
-      
+
   }
 
   _editQuantity(evt) {
@@ -265,7 +265,7 @@ export default class Cart extends Component {
       </div>
       );
     const orderInfo = (
-      
+
       <div className="well">
         <form className="form-horizontal" onSubmit={this._purchaseSubmit}>
           <fieldset>
@@ -351,7 +351,7 @@ export default class Cart extends Component {
         </tbody>
         </table>
         <br />
-        
+
         Total: {total}
         <br />
 
