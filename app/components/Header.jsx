@@ -41,27 +41,14 @@ class Header extends React.Component {
       <div>
         <AppBar
           titleStyle={{height:'100%'}}
-          zDepth={2}
-          title={<span style={{lineHeight:'100px'}}><Link to='/' style={styles.title}>shaq stack store</Link></span>}
+          style={{background:'yellow'}}
+          zDepth={1}
+          title={<span style={{lineHeight:'130px'}}><Link to='/' style={styles.title}>shaq stack store</Link></span>}
           showMenuIconButton={false}
           iconElementRight={(
           <HeaderOptions user={this.props.user}/>
         )}
-
-          style={{background:'white'}}
         />
-
-        <div>
-          <Link to='/products'>Products</Link>
-          <br/>
-          <Link to='/cart'>Cart</Link>
-          <br/>
-          {(user && user.isAdmin) ? <Link to='/orders'>Orders</Link> : null}
-          <br/>
-          {(user && user.isAdmin) ? <Link to='/users'>Users</Link> : null}
-        </div>
-
-
       </div>
     )
   }
@@ -86,7 +73,7 @@ const styles = {
     textDecoration:'none',
     fontFamily:'pacfont',
     color:'black',
-    fontSize:'4vw',
+    fontSize:'46px',
     overflow:'hidden'
   },
 };

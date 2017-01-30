@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
 import {Link, browserHistory} from 'react-router';
+import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
+import getMuiTheme from 'material-ui/styles/getMuiTheme'
+import Subheader from './Subheader'
+
 import axios from 'axios';
 
 const testArr = [{title: 'test'}];
@@ -27,6 +31,16 @@ export default class Users extends Component {
     this._searchUser=this._searchUser.bind(this)
     this._deleteUser=this._deleteUser.bind(this)
     this._promoteUser=this._promoteUser.bind(this)
+  }
+  static childContextTypes =
+    {
+        muiTheme: React.PropTypes.object
+    }
+  getChildContext()
+  {
+      return {
+          muiTheme: getMuiTheme()
+      }
   }
   componentDidMount() {
    axios.get(`/api/admin/users`)
@@ -77,53 +91,58 @@ export default class Users extends Component {
       .map((user,i) =>
       {
         return (
-          <tr key={user.id}>
-
-          <td> <Link to={`/users/${user.id}`}>{user.name}</Link> </td>
-          <td> {user.id} </td>
-          <td> {user.email} </td>
-          <td> {user.isAdmin.toString()} </td>
-          <td> {user.created_at} </td>
-          <td> {user.updated_at} </td>
-          <td>
+        <TableRow key={user.id}>
+          <TableRowColumn> <Link to={`/users/${user.id}`}>{user.name}</Link> </TableRowColumn>
+          <TableRowColumn> {user.id} </TableRowColumn>
+          <TableRowColumn> {user.email} </TableRowColumn>
+          <TableRowColumn> {user.isAdmin.toString()} </TableRowColumn>
+          <TableRowColumn> {user.created_at} </TableRowColumn>
+          <TableRowColumn> {user.updated_at} </TableRowColumn>
+          <TableRowColumn>
           {user.id!==this.state.currentUser.id ?
           <button onClick={(event)=>this._deleteUser(event,i)}>
           delete user</button>
-
           :null}
-          </td>
-          <td>
+          </TableRowColumn>
+          <TableRowColumn>
           {!user.isAdmin?<button onClick={(event)=>this._promoteUser(event,i)}>
           promote user</button>:null
-      }
-            </td>
-          </tr>
+          }
+        </TableRowColumn>
+      </TableRow>
         )
       });
 
     return (
-      <div >
-        <br />
-        Search user name:
-        <input name="Search" onChange={this._searchUser} />
-        <br />
+      <div style={{width:'80%',margin:'0 auto'}}>
 
-        <h1>Users</h1>
-        <table>
-          <tbody>
-        <tr>
-        <th> name </th>
-        <th> ID </th>
-        <th> email </th>
-        <th> admin </th>
-        <th> created </th>
-        <th> updated </th>
-        </tr>
-        {
-          users
-        }
-        </tbody>
-        </table>
+
+        <Subheader>users</Subheader>
+          <br />
+          Search user name
+          <input name="Search" onChange={this._searchUser} style={{marginLeft:'20px'}}/>
+          <br />
+          <br />
+          <br />
+
+        <Table>
+          <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
+            <TableHeaderColumn> name </TableHeaderColumn>
+            <TableHeaderColumn> ID </TableHeaderColumn>
+            <TableHeaderColumn> email </TableHeaderColumn>
+            <TableHeaderColumn> admin </TableHeaderColumn>
+            <TableHeaderColumn> created </TableHeaderColumn>
+            <TableHeaderColumn> updated </TableHeaderColumn>
+            <TableHeaderColumn> delete </TableHeaderColumn>
+            <TableHeaderColumn> promote </TableHeaderColumn>
+          </TableHeader>
+          <TableBody displayRowCheckbox={false}>
+            {
+              users
+            }
+          </TableBody>
+        </Table>
+
         <br />
         <br />
       </div>

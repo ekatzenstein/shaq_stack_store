@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import {Link, browserHistory} from 'react-router';
+import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
+import getMuiTheme from 'material-ui/styles/getMuiTheme'
+
 import axios from 'axios';
+import Subheader from './Subheader';
 
 const testArr = [{title: 'test'}];
 export default class Orders extends Component {
@@ -9,12 +13,21 @@ export default class Orders extends Component {
     super();
     this.state = {
       orders: [],
-
       search:''
     };
     this._searchOrder=this._searchOrder.bind(this)
     this._saveUpdates=this._saveUpdates.bind(this)
     this._categoryChange=this._categoryChange.bind(this)
+  }
+  static childContextTypes =
+    {
+        muiTheme: React.PropTypes.object
+    }
+  getChildContext()
+  {
+      return {
+          muiTheme: getMuiTheme()
+      }
   }
   componentDidMount() {
    axios.get(`/api/admin/orders`)
@@ -65,7 +78,7 @@ export default class Orders extends Component {
 
 
   render() {
-
+    console.log(this.state.orders)
     const orders =
       this.state.orders &&
       this.state.orders
@@ -78,52 +91,55 @@ export default class Orders extends Component {
       .map((order,i) =>
       {
         return (
-          <tr key={order.id}>
+          <TableRow key={order.id}>
 
-          <td> <Link to={`/orders/${order.id}`}>{order.id}</Link> </td>
-          <td> {order.address} </td>
-          <td> {order.created_at} </td>
-          <td> {order.updated_at} </td>
-          <td> {order.email} </td>
-          <td> {order.id} </td>
-          <td>
+          <TableRowColumn>{order.id} </TableRowColumn>
+          <TableRowColumn> {order.address} </TableRowColumn>
+          <TableRowColumn> {order.created_at} </TableRowColumn>
+          <TableRowColumn> {order.updated_at} </TableRowColumn>
+          <TableRowColumn> {order.email} </TableRowColumn>
+          <TableRowColumn> {order.user_id || 'No ID'} </TableRowColumn>
+          <TableRowColumn>
             <select name='status' value = {order.status} onChange={(e)=>this._categoryChange(e,i)}>
               {['Created', 'Processing', 'Cancelled', 'Completed'].map(status=>{
                 return <option key={status} value={status}>{status}</option>
               })}
             </select>
-           </td>
-           <td><button onClick={(e)=>{this._saveUpdates(e,i)}}>Save</button></td>
+          </TableRowColumn>
+           <TableRowColumn><button onClick={(e)=>{this._saveUpdates(e,i)}}>Save</button></TableRowColumn>
 
-          </tr>
+          </TableRow>
         )
       });
 
     return (
-      <div >
+      <div style={{width:'80%',margin:'0 auto'}}>
+        <Subheader>orders</Subheader>
         <br />
-        Search order:
-        <input name="Search" onChange={this._searchOrder} />
+        Search order
+        <input name="Search" onChange={this._searchOrder} style={{marginLeft:'20px'}}/>
+        <br />
+        <br />
         <br />
 
-        <h1>ORDERS</h1>
-        <table>
-          <tbody>
-        <tr>
-        <th> order ID </th>
-        <th> address </th>
-        <th> created </th>
-        <th> updated </th>
-        <th> email </th>
-        <th> user ID </th>
-        <th> status </th>
+        <Table>
+            <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
+              <TableHeaderColumn> order ID </TableHeaderColumn>
+              <TableHeaderColumn> address </TableHeaderColumn>
+              <TableHeaderColumn> created </TableHeaderColumn>
+              <TableHeaderColumn> updated </TableHeaderColumn>
+              <TableHeaderColumn> email </TableHeaderColumn>
+              <TableHeaderColumn> user ID </TableHeaderColumn>
+              <TableHeaderColumn> status </TableHeaderColumn>
+              <TableHeaderColumn> save updates </TableHeaderColumn>
 
-        </tr>
-        {
-          orders
-        }
-        </tbody>
-        </table>
+            </TableHeader>
+            <TableBody displayRowCheckbox={false}>
+            {
+              orders
+            }
+        </TableBody>
+      </Table>
         <br />
         <br />
 

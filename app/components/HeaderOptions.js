@@ -23,14 +23,14 @@ const style={
       paddingRight: '40px',
       paddingTop: '24px',
       paddingBottom: '24px',
-      fontFamily:'Roboto, sans-serif'
+      fontFamily:'pacfont'
   },
   cb:{
       paddingRight: '30px',
       paddingTop: '24px',
       paddingBottom: '24px',
-      fontFamily:'Roboto, sans-serif',
-      fontSize:'16px'
+      fontFamily:'pacfont',
+      fontSize:'20px'
   }
 }
 
@@ -113,8 +113,8 @@ render(){
             {this.props.user ? this.props.user.name : null}
             </td>
               <td className='header' style={style.cb}>
-              <IconButton>
-              <Link to='/cart'><ShoppingCart /></Link>
+              <IconButton style={{width:'60px', height:'60px', marginTop:'0px'}} iconStyle={{width:'40px', height:'40px'}}>
+              <ShoppingCart onClick={()=>browserHistory.push('/cart')}/>
               </IconButton>
               </td>
               <td className='header' style={style.cb}>

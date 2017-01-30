@@ -1,7 +1,16 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import Subheader from './Subheader'
 import StarRatingComponent from 'react-star-rating-component';
 import {Link, browserHistory} from 'react-router';
+import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
+import TextField from 'material-ui/TextField';
+import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
+
+import getMuiTheme from 'material-ui/styles/getMuiTheme'
+import Paper from 'material-ui/Paper';
+
 
 const testArr = [{title: 'test'}];
 export default class Product extends Component {
@@ -13,7 +22,8 @@ export default class Product extends Component {
       userReviews:[],
       rating:3,
       quantity: 1,
-      submitted: false
+      submitted: false,
+      reviewText:''
 
     };
     this.addReview=this.addReview.bind(this);
@@ -22,8 +32,20 @@ export default class Product extends Component {
     this.quantityChange=this.quantityChange.bind(this);
     this.checkOut=this.checkOut.bind(this);
     this.keepShopping=this.keepShopping.bind(this);
+    this.ratingText=this.ratingText.bind(this);
 
   }
+  static childContextTypes =
+    {
+        muiTheme: React.PropTypes.object
+    }
+
+    getChildContext()
+    {
+        return {
+            muiTheme: getMuiTheme()
+        }
+    }
 
   componentDidMount() {
    //this.nextJoke()
@@ -50,6 +72,10 @@ export default class Product extends Component {
       this.setState({rating: nextValue});
     }
 
+  ratingText(e){
+    this.setState({reviewText:e.target.value})
+  }
+
   quantityChange(e){
     console.log('changing quantity');
     this.setState({quantity: e.target.value});
@@ -68,27 +94,25 @@ export default class Product extends Component {
   handleClick(evt) {
 
     evt.preventDefault();
-    console.log('clicked cart, product: ', this.state.product);
     axios.post('/api/orders/cart/', {
       product_id: this.state.product.id,
       quantity: this.state.quantity
     })
     .then(res => {
-      console.log(res.data);
       this.setState({submitted: true});
     })
     .catch(err=> console.log(err));
   }
 
   addReview(evt) {
-    let review_text = document.getElementById('review').value;
+    let review_text = this.state.reviewText;
     review_text = review_text==='' ? 'no input text' : review_text;
     const rating = this.state.rating;
     const review ={rating, review_text, product_id:this.props.params.productId};
     axios.post(`/api/reviews`,review)
     .then(res=>res.data)
     .then(userReview=>{
-      this.setState({userReviews:[...this.state.userReviews,userReview]})
+      this.setState({userReviews:[...this.state.userReviews,userReview], reviewText:''})
 
     })
     .catch(err=>{console.log(err)})
@@ -122,51 +146,45 @@ export default class Product extends Component {
     const checkOutBtn = (<button onClick={this.checkOut}>Check Out</button>);
     const keepShoppingBtn = (<button onClick={this.keepShopping}>Keep Shopping</button>);
 
-    console.log('product_url: ', product.photo_url);
     return (
-      <div >
-        <h1>PRODUCT</h1>
-        <table>
-        <tbody>
-        <tr>
-        <th> title </th>
-        <th> category </th>
-        <th> photo </th>
-        <th> current_price </th>
-        <th> description </th>
-        <th> availability </th>
-        <th> inventory </th>
-        </tr>
+      <div style={{padding:'30px'}}>
+        <div style={{display:'inline'}}>
+        <Card style={{width:'500px' ,float:'left', fontFamily:'pacfont'}}>
+          <CardMedia
+            overlay={<CardTitle title={product.title} subtitle={product.description} />}
+          >
+            <img src={product.photo_url} />
+          </CardMedia>
+          <CardTitle title="Available" subtitle={`$${product.current_price}`} />
+          <CardActions>
+            <FlatButton style={{fontFamily:'pacfont'}} label="Add to Cart" onClick={this.handleClick}/>
+            {this.props.isAdmin ? <FlatButton style={{fontFamily:'pacfont'}} label="Edit Product" onClick={()=>browserHistory.push(`/products/${product.id}/edit`)}/>:null}
+          </CardActions>
+        </Card>
+        </div>
+        <div style={{marginLeft:'530px'}}>
         {
-          productComponent
-        }
-
-        </tbody>
-
-        </table>
-
-        {
-          quantityInput
+          // quantityInput
         }
         {
-          buyButton
+          // buyButton
         }
-        <br />
         {
-          this.state.submitted && checkOutBtn
+          // this.state.submitted && checkOutBtn
         }
-        <br />
         {
-          this.state.submitted && keepShoppingBtn
+          // this.state.submitted && keepShoppingBtn
         }
 
         {this.state.product.reviews && reviews.map((review,i)=>(
-          <div key={i}><h3>{review.rating}/5</h3><span>{review.updated_at}</span><br/>
+          <Paper key={i} style={{padding:'5px',paddingLeft:'20px', marginBottom:'5px'}}><h5>{review.rating}/5</h5><span>{review.updated_at}</span><br/>
           <p>{review.review_text}</p>
-          </div>
+          <br/>
+          </Paper>
         ))}
 
-
+        <Paper style={{padding:'5px',paddingLeft:'20px', marginBottom:'5px'}}>
+          <br/>
         <StarRatingComponent
           name="product rating"
           editing={true}
@@ -175,12 +193,16 @@ export default class Product extends Component {
           onStarClick={this.updateRating}
         />
         <br/>
-        <textarea id='review'></textarea>
+        <TextField hintText="what did you think?" onChange={this.ratingText} value={this.state.reviewText} style={{width:'90%'}} multiLine={true}></TextField>
         <br/>
-        <button onClick={this.addReview}>
-
-          Add Review</button>
         <br/>
+        <RaisedButton onClick={this.addReview}>
+          Add Review</RaisedButton>
+        <br/>
+        <br/>
+        </Paper>
+        <br/>
+        </div>
 
 
 

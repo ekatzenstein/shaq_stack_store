@@ -4,8 +4,11 @@ import axios from 'axios';
 
 
 import {GridList, GridTile} from 'material-ui/GridList';
+import TextField from 'material-ui/TextField';
 import IconButton from 'material-ui/IconButton';
-import Subheader from 'material-ui/Subheader';
+import DropDownMenu from 'material-ui/DropDownMenu';
+import MenuItem from 'material-ui/MenuItem';
+import Subheader from './Subheader';
 import ShoppingCart from 'material-ui/svg-icons/action/add-shopping-cart';
 
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
@@ -59,15 +62,15 @@ export default class Products extends Component {
         }
     }
 
-  _categoryChange(e){
-    this.setState({categories:[e.target.value]})
+  _categoryChange(e,index,value){
+    this.setState({categories:[value]})
   }
   _searchProduct(e){
     this.setState({search:e.target.value.toLowerCase()})
   }
 
-  checkOut(evt){
-    evt.preventDefault();
+  checkOut(e){
+    e.preventDefault();
     browserHistory.push('/cart');
   }
 
@@ -87,8 +90,6 @@ export default class Products extends Component {
 
 
   render() {
-    const checkOutBtn = (<button onClick={this.checkOut}>Check Out</button>);
-
     const products =
       this.state.products &&
       this.state.products.filter( product=>
@@ -121,37 +122,32 @@ export default class Products extends Component {
       //     </tr>
       //   )
       // });
-
+    const pacStyle={fontFamily:'pacfont'};
     return (
-      <div >
-        <br />
-        Search product name and description:
-        <input name="Search" onChange={this._searchProduct} />
-        <br />
+      <div>
+        <div className='container-fluid' style={{width:'80%', margin:'0 auto', lineHeight:'30px', overflow:'hidden'}}>
 
-        Filter by category:
-        <select name="Categories" onChange={this._categoryChange}>
-          <option value="All">All</option>
-          <option value="Clothes">Clothes</option>
-          <option value="Accessories">Accessories</option>
-          <option value="Athletics">Athletics</option>
-          <option value="Beauty">Beauty</option>
-          <option value="Shoes">Shoes</option>
-        </select>
-
-
-
-        <br />
-        <br />
-        {
-          checkOutBtn
-        }
-        <div className='container-fluid' style={{width:'100%'}}>
+          <Subheader><span style={{marginRight:'30px'}}>products</span>
+            <span>
+              <TextField
+              hintText="search"
+              onChange={this._searchProduct}
+              style={{padding:'0px', margin:'0px', width:'400px', marginRight:'20px', fontFamily:'pacfont'}}
+            />
+          <DropDownMenu value={this.state.categories[0]} onChange={this._categoryChange} style={{ top:'19.5px', left:'0px', marginLeft:'-19px', fontFamily:'pacfont'}}>
+              <MenuItem value="All" primaryText="All" style={pacStyle}/>
+              <MenuItem value="Clothes" primaryText="Clothes"  style={pacStyle}/>
+              <MenuItem value="Accessories" primaryText="Accessories" style={pacStyle}/>
+              <MenuItem value="Athletics" primaryText="Athletics" style={pacStyle}/>
+              <MenuItem value="Beauty" primaryText="Beauty" style={pacStyle}/>
+              <MenuItem value="Shoes" primaryText="Shoes" style={pacStyle}/>
+          </DropDownMenu>
+          </span>
+          </Subheader>
     <GridList
       cellHeight={180}
       cols={3}
     >
-      <Subheader>Products</Subheader>
       {products.map((tile) => {
         return(
 
