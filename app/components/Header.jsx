@@ -2,7 +2,6 @@ import React from 'react';
 import {Link} from 'react-router';
 
 
-
 import Tabs from './Tabs';
 import HeaderOptions from './HeaderOptions';
 
@@ -53,6 +52,7 @@ class Header extends React.Component {
     )
   }
 }
+
 
 import {logout} from 'APP/app/reducers/auth'
 import {connect} from 'react-redux'

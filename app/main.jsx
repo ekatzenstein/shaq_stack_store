@@ -16,6 +16,7 @@ import Cart from './components/Cart';
 import ProductEdit from './components/ProductEdit';
 import Orders from './components/Orders';
 import Users from './components/Users';
+import PromoSetup from './components/PromoSetup';
 
 
 const ExampleApp = connect(
@@ -50,6 +51,7 @@ render (
         <Route path="/cart" component={Cart} />
         <Route path="/orders" component={Orders} />
         <Route path="/users" component={Users} />
+        <Route path="/promosetup" component={PromoSetup} />
       </Route>
     </Router>
   </Provider>,
