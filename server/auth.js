@@ -41,7 +41,8 @@ OAuth.setupStrategy({
   config: {
     clientID: env.FACEBOOK_CLIENT_ID,
     clientSecret: env.FACEBOOK_CLIENT_SECRET,
-    callbackURL: `${app.rootUrl}/api/auth/login/facebook`,
+    //callbackURL: `${app.rootUrl}/api/auth/login/facebook`,
+    callbackURL: '/api/auth/google/callback'
   },
   passport
 })
@@ -52,9 +53,9 @@ OAuth.setupStrategy({
   provider: 'google',
   strategy: require('passport-google-oauth').Strategy,
   config: {
-    consumerKey: env.GOOGLE_CONSUMER_KEY,
-    consumerSecret: env.GOOGLE_CONSUMER_SECRET,
-    callbackURL: `${app.rootUrl}/api/auth/login/google`,
+    consumerKey: '1028760147313-98od3mtos6m5r2iu0am4t01k1dc7h1lb.apps.googleusercontent.com',
+    consumerSecret: 'eAEU2Fd-D-q6Ac3gGLkzXpQx',
+    callbackURL: `${app.rootUrl}/api/auth/callback`,
   },
   passport
 })
@@ -67,7 +68,7 @@ OAuth.setupStrategy({
   config: {
     clientID: env.GITHUB_CLIENT_ID,
     clientSecrets: env.GITHUB_CLIENT_SECRET,
-    callbackURL: `${app.rootUrl}/api/auth/login/github`,
+    callbackURL: `${app.rootUrl}/api/auth/Login/github`,
   },
   passport
 })
@@ -131,5 +132,13 @@ auth.post('/logout', (req, res, next) => {
   res.redirect('/api/auth/whoami')
 })
 
+auth.get('/', passport.authenticate('google', {scope: 'email'}))
+
+// auth.get('/callback', passport.authenticate('google'),{
+
+//   successRedirect: '/',
+//   failureRedirecy: '/'
+
+// })
 module.exports = auth
 

@@ -43,6 +43,7 @@ export default class Signup extends Component {
     render() {
 
         return (
+            <div>
             <div >
 
                 <h1>Sign Up</h1>
@@ -61,6 +62,24 @@ export default class Signup extends Component {
                 </form>
 
             </div>
+
+             <div className="or buffer">
+          <div className="back-line">
+            <span>OR</span>
+          </div>
+        </div>
+        <div className="buffer oauth">
+          <p>
+            <a
+              target="_self"
+              href="/api/auth"
+              className="btn btn-social btn-google">
+              <i className="fa fa-google" />
+              <span> Login with Google</span>
+            </a>
+          </p>
+        </div>
+        </div>
         )
     }
 }
