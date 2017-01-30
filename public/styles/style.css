@@ -1,0 +1,11 @@
+@font-face {
+    font-family: 'pacfont';
+    src: url('../fonts/modes.TTF');
+}
+body{
+    font-family:'pacfont' !important;
+}
+html {
+    overflow: -moz-scrollbars-vertical;
+    overflow-y: scroll;
+}

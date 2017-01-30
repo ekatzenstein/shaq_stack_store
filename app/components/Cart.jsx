@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import {Link, browserHistory} from 'react-router';
 import axios from 'axios';
-
+import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
+import Subheader from './Subheader'
+import getMuiTheme from 'material-ui/styles/getMuiTheme'
 
 
 // const products =
@@ -42,7 +44,16 @@ export default class Cart extends Component {
     this._editQuantity = this._editQuantity.bind(this);
     this._handleDelete = this._handleDelete.bind(this);
   }
-
+  static childContextTypes =
+    {
+        muiTheme: React.PropTypes.object
+    }
+  getChildContext()
+  {
+      return {
+          muiTheme: getMuiTheme()
+      }
+  }
   componentDidMount(){
     //get cart data from database which is tied to session
     axios.get('/api/orders/cart')
@@ -58,9 +69,7 @@ export default class Cart extends Component {
       return axios.get('/api/promos/'+this.state.appliedPromo);
     })
     .then(res => res.data)
-    .then(promo=> { 
-      console.log('promo ', promo);
-      console.log('cart: ', this.state.cart)
+    .then(promo=> {
       const discountedProducts = promo.products;
       const newCart = this.state.cart;
 
@@ -83,7 +92,7 @@ export default class Cart extends Component {
     })
     .catch(err=>console.error(err));
   }
-  
+
   // componentDidMount() {
   //  //this.nextJoke()
   //  axios.get('/api/products')
@@ -96,6 +105,7 @@ export default class Cart extends Component {
 
   _purchaseSubmit(evt){
     evt.preventDefault();
+    const _this=this;
     console.log('state: ',this.state);
     axios.post('/api/orders',{
       date: new Date(),
@@ -104,8 +114,7 @@ export default class Cart extends Component {
       status: 'Created',
       cart: this.state.cart
     })
-    .then(()=> { 
-      console.log('submit email!');
+    .then(()=> {
       return axios.post('/api/email', {
         name: this.state.name,
         email: this.state.email,
@@ -115,7 +124,7 @@ export default class Cart extends Component {
     .then(()=> { return axios.post('/api/orders/cart/empty')})
     .then((res)=> {
       console.log('res: ',res.data);
-      this.setState({});
+      _this._cartClear()
       browserHistory.push('/');
     });
   }
@@ -125,7 +134,7 @@ export default class Cart extends Component {
     console.log('state: ',this.state);
     axios.get('/api/promos/'+this.state.promo)
     .then(res => res.data)
-    .then(promo=> { 
+    .then(promo=> {
       console.log('promo ', promo);
       console.log('cart: ', this.state.cart)
       const discountedProducts = promo.products;
@@ -181,9 +190,9 @@ export default class Cart extends Component {
   _keepShopping(evt) {
     evt.preventDefault();
 
-    
+
     browserHistory.push('/');
-      
+
   }
 
   _editQuantity(evt) {
@@ -265,7 +274,7 @@ export default class Cart extends Component {
       </div>
       );
     const orderInfo = (
-      
+
       <div className="well">
         <form className="form-horizontal" onSubmit={this._purchaseSubmit}>
           <fieldset>
@@ -307,60 +316,59 @@ export default class Cart extends Component {
       cost = cost.toFixed(2);
       console.log('cost is: ', cost);
       return (
-        <tr key={item.id}>
+        <TableRow key={item.id}>
 
-        <td> <Link to={`/products/${product.id}`}>{product.title}</Link> </td>
-        <td> {product.category.join(', ')} </td>
-        <td> <img src={product.photo_url} width={"100px"} /></td>
-        <td> {product.current_price} </td>
-        <td> {product.description} </td>
-        <td> <input name="Quantity" id={item.id} value={item.quantity}  onChange={this._editQuantity} /></td>
-        <td> {cost} </td>
-        <td> <button id={`${item.id}`} onClick={this._handleDelete}>Delete</button></td>
+        <TableRowColumn> <Link to={`/products/${product.id}`}>{product.title}</Link> </TableRowColumn>
+        <TableRowColumn> {product.category.join(', ')} </TableRowColumn>
+        <TableRowColumn> <img src={product.photo_url} width={"100px"} style={{padding:'5px'}} /></TableRowColumn>
+        <TableRowColumn> ${product.current_price} </TableRowColumn>
+        <TableRowColumn> {product.description} </TableRowColumn>
+        <TableRowColumn> <input name="Quantity" id={item.id} value={item.quantity}  onChange={this._editQuantity} style={{width:'50px'}}/></TableRowColumn>
+        <TableRowColumn> ${cost} </TableRowColumn>
+        <TableRowColumn> <button id={`${item.id}`} onClick={this._handleDelete}>Delete</button></TableRowColumn>
 
-        </tr>
+        </TableRow>
       )
     });
     return (
-      <div >
+      <div style={{width:'80%', margin:'0 auto'}}>
 
 
 
-        <h1>CART</h1>
+        <Subheader>cart</Subheader>
         {
           promotions
         }
-        <table>
-        <tbody>
-        <tr>
-        <th> title </th>
-        <th> category </th>
-        <th> photo_url </th>
-        <th> current_price </th>
-        <th> description </th>
-        <th> quantity </th>
-        <th> cost </th>
-        <th> delete </th>
 
+        <Table>
+          <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
+            <TableHeaderColumn> title </TableHeaderColumn>
+            <TableHeaderColumn> category </TableHeaderColumn>
+            <TableHeaderColumn> image </TableHeaderColumn>
+            <TableHeaderColumn> price </TableHeaderColumn>
+            <TableHeaderColumn> description </TableHeaderColumn>
+            <TableHeaderColumn> quantity </TableHeaderColumn>
+            <TableHeaderColumn> cost </TableHeaderColumn>
+            <TableHeaderColumn> delete </TableHeaderColumn>
+          </TableHeader>
+          <TableBody displayRowCheckbox={false}>
+            {
+              cart
+            }
+          </TableBody>
+        </Table>
 
-        </tr>
-        {
-          cart
-        }
-
-        </tbody>
-        </table>
         <br />
-        
-        Total: {total}
+
+        Total: ${total}
         <br />
 
         Promo Code Applied: {this.state.appliedPromo}
         <br />
 
-        Discount: {discount}
+        Discount: ${discount}
         <br />
-        New Total: {newTotal}
+        New Total: ${newTotal}
         <br />
         <button type="submit" className="btn btn-success" onClick={this._cartClear}>Clear Cart</button>
         <button type="submit" className="btn btn-success" onClick={this._keepShopping}>Keep Shopping</button>

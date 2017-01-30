@@ -2,7 +2,31 @@ import React, { Component } from 'react';
 import {Link, browserHistory} from 'react-router';
 import axios from 'axios';
 
-const testArr = [{title: 'test'}];
+
+import {GridList, GridTile} from 'material-ui/GridList';
+import TextField from 'material-ui/TextField';
+import IconButton from 'material-ui/IconButton';
+import DropDownMenu from 'material-ui/DropDownMenu';
+import MenuItem from 'material-ui/MenuItem';
+import Subheader from './Subheader';
+import ShoppingCart from 'material-ui/svg-icons/action/add-shopping-cart';
+
+import getMuiTheme from 'material-ui/styles/getMuiTheme'
+
+
+const styles = {
+  root: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    justifyContent: 'space-around',
+  },
+  gridList: {
+    width: 500,
+    height: 450,
+    overflowY: 'auto',
+  },
+};
+
 export default class Products extends Component {
 
   constructor() {
@@ -26,24 +50,34 @@ export default class Products extends Component {
    });
 
   }
+  static childContextTypes =
+    {
+        muiTheme: React.PropTypes.object
+    }
 
-  _categoryChange(e){
-    this.setState({categories:[e.target.value]})
+    getChildContext()
+    {
+        return {
+            muiTheme: getMuiTheme()
+        }
+    }
+
+  _categoryChange(e,index,value){
+    this.setState({categories:[value]})
   }
   _searchProduct(e){
     this.setState({search:e.target.value.toLowerCase()})
   }
 
-  checkOut(evt){
-    evt.preventDefault();
+  checkOut(e){
+    e.preventDefault();
     browserHistory.push('/cart');
   }
 
-  handleClick(evt) {
-
-    evt.preventDefault();
-    console.log('buy product: ', evt.target.id);
-    const product_id = evt.target.id;
+  handleClick(product) {
+    console.log(product)
+    console.log('buy product: ', product.id);
+    const product_id =  product.id;
     axios.post('/api/orders/cart/', {
       product_id: product_id*1,
       quantity: 1
@@ -56,9 +90,6 @@ export default class Products extends Component {
 
 
   render() {
-    console.log(this.props)
-    const checkOutBtn = (<button onClick={this.checkOut}>Check Out</button>);
-
     const products =
       this.state.products &&
       this.state.products.filter( product=>
@@ -74,66 +105,66 @@ export default class Products extends Component {
 
           return condition1 && condition2;
         })
-      .map(product =>
-      {
-        return (
-          <tr key={product.id}>
-
-          <td> <Link to={`/products/${product.id}`}>{product.title}</Link> </td>
-          <td> {product.category.join(', ')} </td>
-          <td> <img src={product.photo_url} width={"100px"}/></td>
-          <td> {product.current_price} </td>
-          <td> {product.description} </td>
-          <td> {product.availability} </td>
-          <td> {product.inventory} </td>
-          <td><button id={`${product.id}`} onClick={this.handleClick}>Add to Cart</button></td>
-          <td>{this.props.isAdmin ? <Link to={`products/${product.id}/edit`}><button>Edit Product</button></Link>:null}</td>
-          </tr>
-        )
-      });
-
+      // .map(product =>
+      // {
+      //   return (
+      //     <tr key={product.id}>
+      //
+      //     <td> <Link to={`/products/${product.id}`}>{product.title}</Link> </td>
+      //     <td> {product.category.join(', ')} </td>
+      //     <td> <img src={product.photo_url} width={"100px"}/></td>
+      //     <td> {product.current_price} </td>
+      //     <td> {product.description} </td>
+      //     <td> {product.availability} </td>
+      //     <td> {product.inventory} </td>
+      //     <td><button id={`${product.id}`} onClick={this.handleClick}>Add to Cart</button></td>
+      //     <td>{this.props.isAdmin ? <Link to={`products/${product.id}/edit`}><button>Edit Product</button></Link>:null}</td>
+      //     </tr>
+      //   )
+      // });
+    const pacStyle={fontFamily:'pacfont'};
     return (
-      <div >
-        <br />
-        Search product name and description:
-        <input name="Search" onChange={this._searchProduct} />
-        <br />
+      <div>
+        <div className='container-fluid' style={{width:'80%', margin:'0 auto', lineHeight:'30px', overflow:'hidden'}}>
 
-        Filter by category:
-        <select name="Categories" onChange={this._categoryChange}>
-          <option value="All">All</option>
-          <option value="Clothes">Clothes</option>
-          <option value="Accessories">Accessories</option>
-          <option value="Athletics">Athletics</option>
-          <option value="Beauty">Beauty</option>
-          <option value="Shoes">Shoes</option>
-        </select>
+          <Subheader><span style={{marginRight:'30px'}}>products</span>
+            <span>
+              <TextField
+              hintText="search"
+              onChange={this._searchProduct}
+              style={{padding:'0px', margin:'0px', width:'400px', marginRight:'20px', fontFamily:'pacfont'}}
+            />
+          <DropDownMenu value={this.state.categories[0]} onChange={this._categoryChange} style={{ top:'19.5px', left:'0px', marginLeft:'-19px', fontFamily:'pacfont'}}>
+              <MenuItem value="All" primaryText="All" style={pacStyle}/>
+              <MenuItem value="Clothes" primaryText="Clothes"  style={pacStyle}/>
+              <MenuItem value="Accessories" primaryText="Accessories" style={pacStyle}/>
+              <MenuItem value="Athletics" primaryText="Athletics" style={pacStyle}/>
+              <MenuItem value="Beauty" primaryText="Beauty" style={pacStyle}/>
+              <MenuItem value="Shoes" primaryText="Shoes" style={pacStyle}/>
+          </DropDownMenu>
+          </span>
+          </Subheader>
+    <GridList
+      cellHeight={180}
+      cols={3}
+    >
+      {products.map((tile) => {
+        return(
+
+        <GridTile
+          key={tile.img}
+          title={<Link to={`/products/${tile.id}`} style={{color:'white'}}>{tile.title}</Link>}
+          subtitle={<span><b>{tile.description}</b></span>}
+          actionIcon={<IconButton  id={`${tile.id}`}  onClick={()=>this.handleClick(tile)}><ShoppingCart color="white" /></IconButton>}
 
 
-        <h1>PRODUCTS</h1>
-        <table>
-          <tbody>
-        <tr>
-        <th> title </th>
-        <th> category </th>
-        <th> photo_url </th>
-        <th> current_price </th>
-        <th> description </th>
-        <th> availability </th>
-        <th> inventory </th>
-        <th> buy now </th>
-
-        </tr>
-        {
-          products
-        }
-        </tbody>
-        </table>
-        <br />
-        <br />
-        {
-          checkOutBtn
-        }
+        >
+          <img src={tile.photo_url} />
+        </GridTile>
+      )
+    })}
+    </GridList>
+  </div>
       </div>
 
     )

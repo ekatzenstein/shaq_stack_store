@@ -5,9 +5,7 @@ import {render} from 'react-dom'
 import {connect, Provider} from 'react-redux'
 
 import store from './store'
-import Jokes from './components/Jokes'
-import Login from './components/Login'
-import WhoAmI from './components/WhoAmI'
+
 import Header from './components/Header'
 
 import Products from './components/Products';
@@ -27,8 +25,7 @@ const ExampleApp = connect(
   ({ user, children }) =>
     <div>
       <nav>
-        {user ? <WhoAmI/> : <Login/>}
-        <Header/>
+        <Header user={user}/>
       </nav>
       {
         // React.Children.map(children,(child)=>React.cloneElement(child,{user}))
