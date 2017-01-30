@@ -2,6 +2,18 @@ import React, { Component } from 'react';
 import {Link, browserHistory} from 'react-router';
 import axios from 'axios';
 
+import Subheader from './Subheader';
+
+import {
+    Table,
+    TableBody,
+    TableHeader,
+    TableHeaderColumn,
+    TableRow,
+    TableRowColumn
+} from 'material-ui/Table';
+import getMuiTheme from 'material-ui/styles/getMuiTheme'
+
 const testArr = [{title: 'test'}];
 export default class PromoSetup extends Component {
 
@@ -16,7 +28,15 @@ export default class PromoSetup extends Component {
     this._changeDiscount=this._changeDiscount.bind(this)
     this._saveCode=this._saveCode.bind(this)
   }
-  
+
+  static childContextTypes = {
+        muiTheme: React.PropTypes.object
+    }
+
+  getChildContext(){
+      return {muiTheme: getMuiTheme()}
+  }
+
   componentDidMount() {
    axios.get(`/api/promos`)
    .then(res => res.data)
@@ -38,12 +58,12 @@ export default class PromoSetup extends Component {
 
   _saveCode(e){
     e.preventDefault();
-    
+
     axios.post(`/api/promos/`,{
       code: this.state.promocode,
       discount: this.state.discount
     })
-    .then(res => { 
+    .then(res => {
       console.log('res is: ', res);
       this.setState({existingcodes: [...this.state.existingcodes, res.data]});
     })
@@ -60,40 +80,44 @@ export default class PromoSetup extends Component {
       .map((code,i) =>
       {
         return (
-          <tr key={i}>
+          <TableRow key={i}>
 
-          <td> {code.code}</td>
-          <td> {code.discount} </td>
-          </tr>
+          <TableRowColumn> {code.code}</TableRowColumn>
+          <TableRowColumn> {code.discount} </TableRowColumn>
+          </TableRow>
         )
       });
 
     return (
-      <div >
+      <div style={{width:'80%', margin:'0 auto'}}>
+        <Subheader>promos</Subheader>
+
+        <input name="Code" onChange={this._changeCode} />  New Code
         <br />
-        New Code:
-        <input name="Code" onChange={this._changeCode} />
         <br />
 
-        New Discount:
-        <input name="Discount" onChange={this._changeDiscount} />
+        <input name="Discount" onChange={this._changeDiscount} />  New Discount
+        <br />
+        <br />
         <br />
         <button onClick={this._saveCode}> Save </button>
         <br />
+        <br />
+        <Subheader>existing promos</Subheader>
+        <Table>
+          <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
+            <TableRow>
+            <TableHeaderColumn> code </TableHeaderColumn>
+            <TableHeaderColumn> discount </TableHeaderColumn>
 
-        <h1>Existing Codes</h1>
-        <table>
-          <tbody>
-        <tr>
-        <th> code </th>
-        <th> discount </th>
-
-        </tr>
-        {
-          existingcodes
-        }
-        </tbody>
-        </table>
+            </TableRow>
+          </TableHeader>
+          <TableBody displayRowCheckbox={false}>
+          {
+            existingcodes
+          }
+          </TableBody>
+      </Table>
         <br />
         <br />
 

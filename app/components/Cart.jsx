@@ -1,24 +1,11 @@
 import React, { Component } from 'react';
 import {Link, browserHistory} from 'react-router';
 import axios from 'axios';
+
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
-import Subheader from './Subheader'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 
-
-// const products =
-//   [
-//     {product_id: 1, title: 'Hats', category: ['Clothes','Accessories'], current_price: 16, description: 'Fedora with a feather', availability: true, inventory: 100}
-//     // {product_id: 2, title: 'Ski Suits', category: ['Athletics', 'Clothes'], current_price: 11, description: 'Full body ski suit', availability: false, inventory: 5},
-//     // {product_id: 3, title: 'Fanny Pack', category: ['Accessories'], current_price: 12, description: 'Bright neon in all colors', availability: true, inventory: 64},
-//     // {product_id: 4, title: 'Chuck Taylors', category: ['Clothes','Shoes'], current_price: 15, description: 'A variation on a classsic', availability: false, inventory: 35},
-//     // {product_id: 5, title: 'Hairspray', category: ['Beauty'], current_price: 41, description: 'Fulll of CFCs', availability: true, inventory: 22},
-//     // {product_id: 6, title: 'Socks', category: ['Clothes'], current_price: 51, description: 'Big wooly socks', availability: true, inventory: 21},
-//     // {product_id: 7, title: 'Wigs', category: ['Accessories', 'Beauty'], current_price: 21, description: 'Business in the front, party in the back', availability: false, inventory: 100}
-//   ];
-//
-// const items = products.map((product,i) => ({id: i, product: product, quantity: 1, cost: product.current_price}));
-
+import Subheader from './Subheader'
 
 export default class Cart extends Component {
 
@@ -92,17 +79,6 @@ export default class Cart extends Component {
     })
     .catch(err=>console.error(err));
   }
-
-  // componentDidMount() {
-  //  //this.nextJoke()
-  //  axios.get('/api/products')
-  //  .then(res => res.data)
-  //  .then( products => {
-  //   this.setState({products: products});
-  //  });
-
-  // }
-
   _purchaseSubmit(evt){
     evt.preventDefault();
     const _this=this;
@@ -342,14 +318,16 @@ export default class Cart extends Component {
 
         <Table>
           <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
-            <TableHeaderColumn> title </TableHeaderColumn>
-            <TableHeaderColumn> category </TableHeaderColumn>
-            <TableHeaderColumn> image </TableHeaderColumn>
-            <TableHeaderColumn> price </TableHeaderColumn>
-            <TableHeaderColumn> description </TableHeaderColumn>
-            <TableHeaderColumn> quantity </TableHeaderColumn>
-            <TableHeaderColumn> cost </TableHeaderColumn>
-            <TableHeaderColumn> delete </TableHeaderColumn>
+            <TableRow>
+              <TableHeaderColumn> title </TableHeaderColumn>
+              <TableHeaderColumn> category </TableHeaderColumn>
+              <TableHeaderColumn> image </TableHeaderColumn>
+              <TableHeaderColumn> price </TableHeaderColumn>
+              <TableHeaderColumn> description </TableHeaderColumn>
+              <TableHeaderColumn> quantity </TableHeaderColumn>
+              <TableHeaderColumn> cost </TableHeaderColumn>
+              <TableHeaderColumn> delete </TableHeaderColumn>
+            </TableRow>
           </TableHeader>
           <TableBody displayRowCheckbox={false}>
             {
