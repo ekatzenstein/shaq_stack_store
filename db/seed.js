@@ -17,7 +17,32 @@ const seedProducts = () => db.Promise.map([
   {title: 'Chuck Taylors', photo_url: '/images/chuck_taylors.jpg', category: ['Clothes','Shoes'], current_price: 15, description: 'A variation on a classsic', availability: false, inventory: 35},
   {title: 'Hairspray', photo_url: '/images/hairspray.jpg', category: ['Beauty'], current_price: 41, description: 'Fulll of CFCs', availability: true, inventory: 22, promo_id: 2},
   {title: 'Socks', photo_url: '/images/socks.jpg', category: ['Clothes'], current_price: 51, description: 'Big wooly socks', availability: true, inventory: 21},
-  {title: 'Wigs', photo_url: '/images/wigs.jpg', category: ['Accessories', 'Beauty'], current_price: 21, description: 'Business in the front, party in the back', availability: false, inventory: 100, promo_id: 2}
+  {title: 'Wigs', photo_url: '/images/wigs.jpg', category: ['Accessories', 'Beauty'], current_price: 21, description: 'Business in the front, party in the back', availability: false, inventory: 100, promo_id: 2},
+
+  {title: 'chanel', photo_url: '/images/chanel.jpg', category: ['Beauty'], current_price: 49, description: 'Chanel loose powder', availability: true, inventory: 100, promo_id: 2},
+
+  {title: 'cosmetic', photo_url: '/images/cosmetic.jpg', category: ['Beauty'], current_price: 31, description: 'Revlon violet pink set', availability: true, inventory: 100, promo_id: 2},
+
+  {title: 'covergirl', photo_url: '/images/covergirl.jpg', category: ['Beauty'], current_price: 21, description: 'Cosmetic for young generation', availability: false, inventory: 100, promo_id: 2},
+
+  {title: 'dior', photo_url: '/images/dior.jpg', category: ['Beauty'], current_price: 49, description: 'Luxury for your face', availability: true, inventory: 100, promo_id: 2},
+
+  {title: 'dolls', photo_url: '/images/dolls.jpg', category: ['Accessories'], current_price: 9, description: 'For your room', availability: false, inventory: 100, promo_id: 2},
+
+  {title: 'heel1', photo_url: '/images/heel1.jpg', category: ['Shoes'], current_price: 27, description: 'Edge on your heel', availability: true, inventory: 100, promo_id: 2},
+
+  {title: 'pinkset', photo_url: '/images/pinkset.jpg', category: ['Accessories', 'Clothes'], current_price: 22, description: 'Everything for your pink day', availability: false, inventory: 100, promo_id: 2},
+
+  {title: 'rainbow', photo_url: '/images/rainbow.jpg', category: ['Accessories', 'Clothes'], current_price: 31, description: 'Freedome', availability: false, inventory: 100, promo_id: 2},
+
+  {title: 'sneakers', photo_url: '/images/sneakers.jpg', category: ['Shoes', 'Athletics'], current_price: 62, description: 'Compy with your style', availability: false, inventory: 100, promo_id: 2},
+
+  {title: 'watche', photo_url: '/images/watch.jpg', category: ['Accessories'], current_price: 20, description: 'What time is i now? 19: 08 ! ', availability: false, inventory: 100, promo_id: 2},
+
+  {title: 'wig2', photo_url: '/images/wig2.jpg', category: ['Accessories', 'Beauty'], current_price: 21, description: 'Party people', availability: false, inventory: 100, promo_id: 1},
+
+  {title: 'Training set', photo_url: '/images/3set.jpg', category: ['Athletics', 'Clothes'], current_price: 21, description: 'Lion look', availability: false, inventory: 100, promo_id: 1},
+  {title: 'Training suit for couple', photo_url: '/images/couple.jpg', category: ['Athletics', 'Clothes'], current_price: 21, description: 'Lion look', availability: false, inventory: 100, promo_id: 1},
 ], product => db.model('products').create(product));
 
 const seedReviews = () => db.Promise.map([
