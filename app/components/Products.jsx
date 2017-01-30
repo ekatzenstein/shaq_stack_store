@@ -80,8 +80,6 @@ export default class Products extends Component {
       quantity: 1
     })
     .then(res => {
-      // product.carted=!product.carted;
-      // this.setState({products:this.state.products})
       console.log(res.data);
     })
     .catch(err=> console.log(err));
@@ -155,7 +153,6 @@ export default class Products extends Component {
     >
       <Subheader>Products</Subheader>
       {products.map((tile) => {
-        console.log(tile.carted)
         return(
 
         <GridTile
