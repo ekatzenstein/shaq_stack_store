@@ -32,6 +32,7 @@ export default class HeaderDropdown extends React.Component {
         {this.props.user?<Divider/>:null}
         {this.props.user?<MenuItem style={fontStyle} primaryText="Orders" onClick={()=>browserHistory.push('/orders')}/>:null}
         {this.props.user?<MenuItem style={fontStyle} primaryText="Users" onClick={()=>browserHistory.push('/users')}/>:null}
+        {this.props.user?<MenuItem style={fontStyle} primaryText="Promos" onClick={()=>browserHistory.push('/promosetup')}/>:null}
         <Divider/>
         <MenuItem style={fontStyle} primaryText={this.props.user?"Logout":"Login"} onClick={()=>{
             this.props.user?this.props.logOut():this.props.openLogin();
